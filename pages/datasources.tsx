@@ -24,10 +24,10 @@ export default function Datasources() {
                 <Switch isChecked={isVerbose} onChange={() => setVerbosity((v) => !v)} />
             </FormControl>
             <Configure datasources={datasources} attributes={[
-                {label: 'Repeating', name: 'a', value: null, jsonpath: '0.store.books.*', type: 'context' as const},
-                {label: 'Visibility', name: 'a', value: true, jsonpath: null, type: 'boolean' as const},
-                {label: 'Text content', name: 'a', value: null, jsonpath: '0.store.books.*.title', type: 'text' as const},
-                {label: 'URL Link', name: 'a', value: 'http://google.com', jsonpath: null, type: 'text' as const},
+                {key: 'repeating', label: 'Repeating', name: 'a', value: null, jsonpath: '0.store.books.*', type: 'context' as const},
+                {key: 'visibility', label: 'Visibility', name: 'a', value: true, jsonpath: null, type: 'boolean' as const},
+                {key: 'text-content', label: 'Text content', name: 'a', value: null, jsonpath: '0.store.books.*.title', type: 'text' as const},
+                {key: 'url-link', label: 'URL Link', name: 'a', value: 'http://google.com', jsonpath: null, type: 'text' as const},
             ]} scopes={["0.store.books.*"]} />
 
 <h2>Mapping in primitive array:</h2>
