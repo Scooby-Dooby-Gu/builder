@@ -1,149 +1,73 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {mdiFormatLetterCase, mdiMonitorCellphone, mdiPalette} from "@mdi/js";
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuidv4} from "uuid";
+import {DEFAULT_SYSTEM, isStyleSystem, newItem, StyleSystem, TokenKind, usagesOf} from "utils/styleSystem";
 
-export enum GroupsTitles {
-    STYLES = "styles"
+export const STORAGE_KEY = "builder.styleSystem.v1";
+
+function clone<T>(value: T): T {
+    return JSON.parse(JSON.stringify(value));
 }
 
-export enum SectionsTitles {
-    FONT = "fonts",
-    BREAKPOINT = "breakpoints",
-    TYPOGRAPHY = "typography",
-    COLORS = "colors"
+export interface StylesState {
+    system: StyleSystem,
+    // Which theme each component in the builder uses, by component id.
+    componentThemes: Record<string, string>,
 }
 
-export interface Group {
-    title: string,
-    sections: Section[]
-}
-
-export interface Section {
-    title: string,
-    icon: any,
-    description: string
-}
-
-export interface StyleGuideState {
-    fonts: Font[],
-    colors: Color[],
-    groups: Group[],
-    activeSection: Section | null,
-}
-
-export const initialFont: Font = {
-    title: "",
-    active: false,
-    description: "",
-    preview: "",
-    name: "",
-    id: ""
-}
-
-export interface Font {
-    title: string,
-    active: boolean,
-    id: string,
-    description: string,
-    preview: string,
-    name: string
-}
-
-export const initialColor: Color = {
-    colors: [],
-    title: "",
-    active: false,
-    description: "",
-    preview: "",
-    name: "",
-    id: ""
-}
-
-export interface Color {
-    colors: string[],
-    title: string,
-    active: boolean,
-    id: string,
-    description: string,
-    preview: string,
-    name: string
-}
-
-const initialState: StyleGuideState = {
-    fonts: [],
-    colors: [],
-    activeSection: {title: "", description: "", icon: ""},
-    groups: [
-        {
-            title: GroupsTitles.STYLES,
-            sections: [
-                {
-                    title: SectionsTitles.FONT,
-                    icon: mdiFormatLetterCase,
-                    description: "Google font + custom css"
-                },
-                {
-                    title: SectionsTitles.COLORS,
-                    icon: mdiPalette,
-                    description: "Good colors"
-                }
-            ]
-        },
-        {
-            title: "PRESETS",
-            sections: [
-                {
-                    title: SectionsTitles.TYPOGRAPHY,
-                    icon: mdiFormatLetterCase,
-                    description: "Good typography"
-                }
-            ]
+function loadSaved(): StylesState {
+    try {
+        if (typeof window !== "undefined") {
+            const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
+            if (saved && isStyleSystem(saved.system)) {
+                return {system: saved.system, componentThemes: saved.componentThemes ?? {}};
+            }
         }
-    ]
+    } catch {
+        // Ignore unreadable saved state and fall back to defaults.
+    }
+    return {system: clone(DEFAULT_SYSTEM), componentThemes: {}};
 }
 
-export const styleGuideSlice = createSlice({
-    name: 'styles',
+const initialState: StylesState = loadSaved();
+
+export const stylesSlice = createSlice({
+    name: "styles",
     initialState,
     reducers: {
-        setFonts: (state, action) => {
-            state.fonts = action.payload;
+        addItem: {
+            reducer(state, action: PayloadAction<{ kind: TokenKind, id: string }>) {
+                const {kind, id} = action.payload;
+                (state.system[kind] as any[]).push(newItem(kind, id, state.system as StyleSystem));
+            },
+            // The id is created here so the caller can open the new item right away.
+            prepare(kind: TokenKind) {
+                return {payload: {kind, id: uuidv4()}};
+            },
         },
-        setColors: (state, action) => {
-            state.colors = action.payload;
+        updateItem(state, action: PayloadAction<{ kind: TokenKind, id: string, patch: Record<string, any> }>) {
+            const {kind, id, patch} = action.payload;
+            const item = (state.system[kind] as any[]).find(i => i.id === id);
+            if (item) Object.assign(item, patch);
         },
-        setActiveSection: (state, action) => {
-            state.activeSection = action.payload;
+        removeItem(state, action: PayloadAction<{ kind: TokenKind, id: string }>) {
+            const {kind, id} = action.payload;
+            // Items still referenced by another layer, or themes applied to a component, can't be removed.
+            if (usagesOf(state.system as StyleSystem, kind, id).length) return;
+            if (kind === "themes" && Object.values(state.componentThemes).includes(id)) return;
+            (state.system as any)[kind] = (state.system[kind] as any[]).filter(i => i.id !== id);
         },
-        createFont: (state) => {
-            state.fonts.push({...initialFont, id: uuidv4()});
+        resetSystem(state) {
+            state.system = clone(DEFAULT_SYSTEM);
+            state.componentThemes = {};
         },
-        saveFont: (state, action) => {
-            state.fonts.forEach((font, i) => {
-                if (font.id === action.payload.id) {
-                    state.fonts[i] = {...state.fonts[i], ...action.payload};
-                }
-            })
+        setComponentTheme(state, action: PayloadAction<{ componentId: string, themeId: string | null }>) {
+            const {componentId, themeId} = action.payload;
+            if (themeId) state.componentThemes[componentId] = themeId;
+            else delete state.componentThemes[componentId];
         },
-        toggleActive: (state, action: PayloadAction<{ type: string, id: string }>) => {
-            const {type, id} = action.payload;
-
-            state[type].forEach(item => {
-                if (item.id === id) {
-                    item.active = !item.active;
-                }
-            })
-        }
-    }
+    },
 });
 
-export const {
-    setActiveSection,
-    toggleActive,
-    createFont,
-    saveFont,
-    setFonts,
-    setColors
-} = styleGuideSlice.actions;
+export const {addItem, updateItem, removeItem, resetSystem, setComponentTheme} = stylesSlice.actions;
 
-export default styleGuideSlice.reducer;
+export default stylesSlice.reducer;

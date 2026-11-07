@@ -1,7 +1,40 @@
-import { FormControl, FormLabel , HStack, Switch, Tooltip } from "components/ui";
-import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Box, Divider, FormControl, FormLabel , HStack, NativeSelect, Switch, Text, Tooltip } from "components/ui";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { setDataDisplayed, setDataRepeated, setHiddenDisplayed } from "store/slices/builderSlice";
+import { setComponentTheme } from "store/slices/stylesSlice";
+
+// Pick the style guide theme that styles this component's variants.
+function ThemePicker() {
+    const dispatch = useAppDispatch();
+    const router = useRouter();
+    const componentId = String(router.query.id ?? "");
+    const themes = useAppSelector((state) => state.styles.system.themes);
+    const themeId = useAppSelector((state) => state.styles.componentThemes[componentId] ?? "");
+
+    return <FormControl display="flex" alignItems="center" width="auto">
+        <FormLabel mb="0" htmlFor="select-theme">
+            Theme
+        </FormLabel>
+        <NativeSelect
+            id="select-theme"
+            size="sm"
+            width="44"
+            bg="white"
+            value={themeId}
+            onChange={(e) => dispatch(setComponentTheme({ componentId, themeId: e.target.value || null }))}
+        >
+            <option value="">No theme</option>
+            {themes.map((theme) => <option key={theme.id} value={theme.id}>{theme.name}</option>)}
+        </NativeSelect>
+        <Link href="/styles/themes" passHref>
+            <Text as="a" ml="3" fontSize="sm" color="blue.600" whiteSpace="nowrap" _hover={{ textDecoration: "underline" }}>
+                Edit themes
+            </Text>
+        </Link>
+    </FormControl>
+}
 
 export default function EditorHeader() {
     const dispatch = useAppDispatch();
@@ -11,7 +44,9 @@ export default function EditorHeader() {
     const hasData = useAppSelector((state) => state.builder.hasData);
     const hasRepeating = useAppSelector((state) => state.builder.hasRepeating);
     
-    return <HStack justifyContent="center" spacing={8} py={8} background="gray.100">
+    return <HStack justifyContent="center" spacing={8} py={8} background="gray.100" flexWrap="wrap" rowGap={4}>
+        <ThemePicker />
+        <Box alignSelf="stretch"><Divider orientation="vertical" borderColor="gray.300" /></Box>
         <Tooltip label="Not implemented">
             <FormControl display="flex" alignItems="center" width="auto" isDisabled={true}>
                     <FormLabel mb="0" htmlFor="switch-repeating">

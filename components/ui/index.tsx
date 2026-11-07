@@ -36,6 +36,8 @@ export * from "@chakra-ui/icons";
 // Select is react-select based (options / object value / onChange(option)),
 // not Chakra's native <select>. These explicit exports take precedence over `export *`.
 export {Select} from "chakra-react-select";
+// Chakra's plain <select>, for simple option lists.
+export {Select as NativeSelect} from "@chakra-ui/react";
 
 // Chakra 1.x types PopoverTrigger without `children`, which React 18 types no longer imply.
 export const PopoverTrigger = ChakraPopoverTrigger as React.FC<{ children: ReactNode }>;

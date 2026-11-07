@@ -65,7 +65,7 @@ export default function Variant({ id, name, content, state, isDeleted } : Compon
                 {!isDeleted && <IconButton color={"gray.500"} aria-label="Delete variant" icon={<DeleteIcon w={6} h={6} />} onClick={() => dispatch(deleteVariant(id))}  />}
             </HStack>
         </HStack>
-        {!isDeleted && <VStack background="white" borderRadius={3} minH={100} p={0}>
+        {!isDeleted && <VStack className="variant-surface" background="white" borderRadius={3} minH={100} p={0}>
             <Container
                 px={5}
                 py={5}

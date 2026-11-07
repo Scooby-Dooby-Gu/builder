@@ -37,18 +37,6 @@ return src.replace(`function getRawTag(value) {`, 'function getRawTag(value) {re
                 permanent: true
             }
         ]
-    },
-    async rewrites() {
-        return [
-            {
-                source: '/styles/:section',
-                destination: '/styles'
-            },
-            {
-                source: '/styles/:section/:id',
-                destination: '/styles'
-            }
-        ]
     }
 }
 

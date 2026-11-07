@@ -4,6 +4,7 @@ import {UIProvider, extendTheme, baseTheme} from "components/ui";
 import Head from "next/head";
 import {Provider} from "react-redux";
 import store from "../store/store";
+import FontLinks from "components/styleguide/FontLinks";
 
 const globalStyles = {
     styles: {
@@ -43,6 +44,7 @@ export function AppProviders({children}) {
     return (
         <UIProvider theme={theme}>
             <Provider store={store}>
+                <FontLinks/>
                 {children}
             </Provider>
         </UIProvider>
