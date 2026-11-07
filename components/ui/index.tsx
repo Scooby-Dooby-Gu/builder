@@ -135,17 +135,19 @@ export function Placeholder({title, text}: { title?: ReactNode, text?: ReactNode
 type NavItem = { label: string, active?: boolean, onClick?: () => void };
 type NavAction = { ariaLabel: string, icon: ReactElement, active?: boolean, onClick?: () => void };
 
-export function NavigationHorizontal({items = [], actions = [], icon, image, menu}: {
+export function NavigationHorizontal({items = [], actions = [], icon, image, brand, menu}: {
     items?: NavItem[],
     actions?: NavAction[],
     icon?: ReactElement,
     image?: { src: string, w?: string, alt?: string },
+    brand?: ReactNode,
     menu?: { name: string, items: { label: string, onClick?: () => void }[] },
 }): ReactElement {
     return (
         <Flex as="nav" h="full" align="center" pr="4" bg="white">
             {icon}
             {image && <Image src={image.src} w={image.w} alt={image.alt || ""} mr="8"/>}
+            {brand && <Text fontWeight="bold" fontSize="lg" mr="8" whiteSpace="nowrap">{brand}</Text>}
 
             <HStack spacing="1" h="full">
                 {items.map(item => (

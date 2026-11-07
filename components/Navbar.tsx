@@ -51,6 +51,7 @@ const Navbar: FunctionComponent<{}> = (props: {}): ReactElement => {
                     ml="4"
                     mr="4"
                 />}
+                brand="Builder"
                 items={items}
                 menu={menu}
             />

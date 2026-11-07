@@ -53,7 +53,7 @@ function App({Component, pageProps}: AppProps) {
     return (
         <AppProviders>
             <Head>
-                <title>My page title</title>
+                <title>Builder</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
             </Head>
 

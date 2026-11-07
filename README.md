@@ -1,4 +1,4 @@
-# symphony-components
+# Builder
 
 A component builder prototype: a component library, a style guide (fonts, colors, typography), and a visual editor for composing components and mapping them to JSON data sources.
 

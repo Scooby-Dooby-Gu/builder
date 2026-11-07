@@ -36,7 +36,7 @@ const Styles: NextPage = () => {
             <Navbar/>
 
             <Head>
-                <title>Style Guide</title>
+                <title>Style Guide · Builder</title>
             </Head>
 
             <Script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"/>
