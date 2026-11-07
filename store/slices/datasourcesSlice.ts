@@ -6,6 +6,7 @@ const initialState: Datasource[] = [
     {
         id: '0',
         name: 'Books & Bicycles Shop',
+        description: 'Product catalog for a small shop: books with authors, reviews and tags, plus a bicycle parts section.',
         sample: {
             "store": {
                 "name": "Books & Bicycle parts",
@@ -78,6 +79,72 @@ const initialState: Datasource[] = [
                     },
                     "parts": ["Wheel", "Thing"]
                 }
+            }
+        }
+    },
+    {
+        id: '1',
+        name: 'Events Calendar',
+        description: 'Upcoming events with venues, speakers and ticket links.',
+        sample: {
+            "calendar": {
+                "title": "Spring Events",
+                "timezone": "America/New_York",
+                "events": [
+                    {
+                        "title": "Design Systems Meetup",
+                        "date": "2022-04-12",
+                        "summary": "Talks on scaling component libraries across teams.",
+                        "ticketUrl": "https://example.com/tickets/design-systems",
+                        "price": 0,
+                        "isSoldOut": false,
+                        "venue": {"name": "Hall A", "city": "New York"},
+                        "speakers": [
+                            {"name": "Ana Ruiz", "role": "Design lead"},
+                            {"name": "Tom Becker", "role": "Frontend engineer"}
+                        ]
+                    },
+                    {
+                        "title": "Headless CMS Workshop",
+                        "date": "2022-05-03",
+                        "summary": "Hands-on session wiring content APIs into page templates.",
+                        "ticketUrl": "https://example.com/tickets/headless-cms",
+                        "price": 49,
+                        "isSoldOut": true,
+                        "venue": {"name": "Studio 2", "city": "Boston"},
+                        "speakers": [
+                            {"name": "Priya Shah", "role": "Solutions architect"}
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        id: '5',
+        name: 'Team Directory',
+        description: 'People on the team with roles, locations and skills.',
+        sample: {
+            "team": {
+                "name": "Product & Engineering",
+                "members": [
+                    {
+                        "name": "Maya Chen",
+                        "role": "Product designer",
+                        "email": "maya@example.com",
+                        "profileUrl": "/team/maya-chen",
+                        "location": {"city": "Austin", "isRemote": true},
+                        "skills": ["Prototyping", "Design systems"]
+                    },
+                    {
+                        "name": "Leo Martins",
+                        "role": "Software engineer",
+                        "email": "leo@example.com",
+                        "profileUrl": "/team/leo-martins",
+                        "location": {"city": "Lisbon", "isRemote": false},
+                        "skills": ["React", "GraphQL", "Testing"]
+                    }
+                ]
             }
         }
     }

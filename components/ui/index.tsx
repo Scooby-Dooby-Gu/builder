@@ -46,6 +46,10 @@ export const PopoverTrigger = ChakraPopoverTrigger as React.FC<{ children: React
 
 export const baseTheme = {
     ...chakraTheme,
+    colors: {
+        ...chakraTheme.colors,
+        primary: chakraTheme.colors.blue,
+    },
     components: {
         ...chakraTheme.components,
         Button: {

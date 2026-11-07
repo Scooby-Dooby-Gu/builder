@@ -14,7 +14,7 @@
         "state": "published",
         "datasources": [
           {
-            "name": "Data source no. 1",
+            "name": "Events Calendar",
             "id": 1
           }
         ]
@@ -30,7 +30,7 @@
         "state": "staged",
         "datasources": [
           {
-            "name": "Data source no. 1",
+            "name": "Team Directory",
             "id": 5
           }
         ]
@@ -46,7 +46,7 @@
         "state": "staged",
         "datasources": [
           {
-            "name": "Data source no. 1",
+            "name": "Books & Bicycles Shop",
             "id": 0
           }
         ]
@@ -62,7 +62,7 @@
         "state": "staged",
         "datasources": [
           {
-            "name": "Data source no. 1",
+            "name": "Events Calendar",
             "id": 1
           }
         ]
@@ -84,7 +84,7 @@
         "state": "published",
         "datasources": [
           {
-            "name": "Data source no. 1",
+            "name": "Events Calendar",
             "id": 1
           }
         ]

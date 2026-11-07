@@ -42,7 +42,7 @@ export default function ConfigureAttribute(
     const [showDetails, setShowDetails] = useState(false);
 
     const [datasourceId, setDatasourceId] = useState(() => {
-        return '0';
+        return datasources[0]?.id ?? '0';
     })
 
     const [textpath, setTextpath] = useState(attribute.value);

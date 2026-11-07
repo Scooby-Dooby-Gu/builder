@@ -72,7 +72,7 @@ function ConfigureDataLeaf({ warning, action, label, isVerbose, error, onClick, 
     } else if (action == 'repeating-mapping') {
         return <Badge variant="datapath" colorScheme="purple" cursor="pointer" onClick={onClick}>{label} <RepeatIcon /></Badge>
     } else if (action == 'nesting') {
-        return <Badge variant="datapath" colorScheme="white">{label} <RepeatIcon /> </Badge>
+        return <Badge variant="datapath" colorScheme="gray">{label} <RepeatIcon /> </Badge>
     } else if (action == 'indicating') {
         return <>
             <HStack spacing={0} onClick={onClear}>
@@ -81,7 +81,7 @@ function ConfigureDataLeaf({ warning, action, label, isVerbose, error, onClick, 
             </HStack>
         </>
     } else {
-        return <Badge variant="datapath" colorScheme="grey" opacity={0.5}>{label}</Badge>
+        return <Badge variant="datapath" colorScheme="gray" opacity={0.5}>{label}</Badge>
     }
 }
 
