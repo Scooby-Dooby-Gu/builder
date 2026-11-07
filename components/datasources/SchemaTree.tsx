@@ -122,7 +122,8 @@ export default function SchemaTree({fields}: { fields: FieldNode[] }) {
     addRows(fields, 0);
 
     return (
-        <Box border="1px solid" borderColor="gray.200" borderRadius="lg" overflow="hidden" bg="white">
+        <Box border="1px solid" borderColor="gray.200" borderRadius="lg" overflowX="auto" bg="white">
+            <Box minW="760px">
             <Box
                 display="grid"
                 gridTemplateColumns={COLUMNS}
@@ -142,6 +143,7 @@ export default function SchemaTree({fields}: { fields: FieldNode[] }) {
                 <Text>Path</Text>
             </Box>
             {rows}
+            </Box>
         </Box>
     );
 }

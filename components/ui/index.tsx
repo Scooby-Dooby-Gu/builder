@@ -40,6 +40,17 @@ export {Select} from "chakra-react-select";
 // Chakra 1.x types PopoverTrigger without `children`, which React 18 types no longer imply.
 export const PopoverTrigger = ChakraPopoverTrigger as React.FC<{ children: ReactNode }>;
 
+// Icon also accepts a Material Design Icons `path` string (from @mdi/js), as the app's
+// original design system did. Without `path` it behaves like Chakra's Icon.
+type MdiIconProps = IconProps & { path?: string };
+const PathIcon = React.forwardRef<SVGSVGElement, MdiIconProps>(({path, children, ...props}, ref) => (
+    path
+        ? <Icon ref={ref} viewBox="0 0 24 24" {...props}><path fill="currentColor" d={path}/></Icon>
+        : <Icon ref={ref} {...props}>{children}</Icon>
+));
+PathIcon.displayName = "Icon";
+export {PathIcon as Icon};
+
 // ---------------------------------------------------------------------------
 // Theme: Chakra defaults plus the custom variants the app relies on
 // ---------------------------------------------------------------------------
