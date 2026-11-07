@@ -1,0 +1,205 @@
+/*
+ * Builder editor chrome.
+ *
+ * The custom CKEditor theme (ckeditor5/ckeditor5-theme-custom) draws its UI in a
+ * saturated purple with white icons. These overrides bring the element toolbar,
+ * selection outline, block handle and dropdowns in line with the rest of the app
+ * (Chakra blue and grays, soft shadows, rounded corners).
+ *
+ * The editor injects its own CSS at runtime, after this file, so selectors here
+ * are deliberately more specific than the theme's.
+ */
+
+html:root {
+    --ui-accent: #3182ce;
+    --ck-color-resizer: #3182ce;
+    --ck-color-focus-border: #3182ce;
+    --ck-border-radius: 6px;
+    --ck-font-face: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --ck-font-size-base: 13px;
+    --ck-color-base-border: #e2e8f0;
+    --ck-color-toolbar-border: #e2e8f0;
+    --ck-color-dropdown-panel-border: #e2e8f0;
+    --ck-color-panel-border: #e2e8f0;
+    --ck-color-button-default-hover-background: #edf2f7;
+    --ck-color-button-default-active-background: #e2e8f0;
+    --ck-color-button-on-background: #ebf8ff;
+    --ck-color-button-on-hover-background: #bee3f8;
+    --ck-color-button-on-color: #2b6cb0;
+    --ck-color-list-button-hover-background: #edf2f7;
+    --ck-color-list-button-on-background: #ebf8ff;
+    --ck-color-list-button-on-text: #2b6cb0;
+    --ck-color-tooltip-background: #2d3748;
+    --ck-drop-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+    /* Corner brackets around selected data variables, in the app's blue. */
+    --ck-border-image-focus: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4 0H0V4H1V1H4V0ZM0 5V9H4V8H1V5H0ZM5 9H9V5H8V8H5V9ZM9 4V0H5V1H8V4H9Z' fill='rgba(49, 130, 206, .55)'/%3E%3C/svg%3E");
+}
+
+/* Selected element: a solid, rounded outline instead of a dashed purple box. */
+html body .ck.ck.ck.ck .ck-indicator.context {
+    outline: 1.5px solid rgba(49, 130, 206, 0.7);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+html body .ck.ck.ck.ck .ck-indicator.context.ck-dragged {
+    outline-color: #cbd5e0;
+}
+
+/* The element toolbar ("chip") above the selected element. */
+html body .ck-body-wrapper .ck.ck.ck .ck-indicator.context .ck-tag {
+    height: 30px;
+    margin-top: -40px;
+    margin-left: -4px;
+    padding: 0 3px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12), 0 1px 2px rgba(15, 23, 42, 0.06);
+    color: #4a5568;
+}
+html body .ck-body-wrapper .ck.ck.ck .ck-indicator.context.ck-dragged .ck-tag {
+    background: #f7fafc;
+}
+
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left > .ck-toolbar__items {
+    align-items: center;
+    gap: 1px;
+}
+
+/* Toolbar buttons: gray icons, rounded hover, no white-on-purple. */
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left > .ck-toolbar__items > .ck-button,
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left > .ck-toolbar__items > .ck-dropdown > .ck-dropdown__button {
+    height: 24px;
+    min-height: 24px;
+    margin: 0;
+    border-radius: 6px !important;
+    color: #4a5568;
+    background: transparent;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left > .ck-toolbar__items > .ck-button:hover,
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left > .ck-toolbar__items > .ck-dropdown > .ck-dropdown__button:hover {
+    background: #edf2f7;
+    color: #1a202c;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-toolbar.left > * > * > .ck-dropdown__button.ck-on,
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left > .ck-toolbar__items > .ck-dropdown > .ck-dropdown__button.ck-on {
+    background: #ebf8ff;
+    background-image: none;
+    color: #2b6cb0;
+}
+/* The theme paints these icons white for its purple bar; the deep selectors it
+   uses make !important the simplest way to hand color back to the button. */
+html body .ck-body-wrapper .ck-tag .ck.ck-toolbar.left .ck-icon path {
+    fill: currentColor !important;
+    color: inherit !important;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-toolbar.left > * > * > .ck-dropdown__button .ck-icon,
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-toolbar.left > * > .ck-button .ck-icon {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-toolbar.left > * > * > .ck-dropdown__button:not(.label),
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-toolbar.left > * > .ck-button {
+    width: 26px;
+    padding: 0 5px;
+    justify-content: center;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-toolbar.left .drag {
+    color: #a0aec0;
+}
+
+/* Element name ("Heading 1") in the styles button. */
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-dropdown.styles {
+    margin-left: 2px;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck-dropdown.styles > .ck-dropdown__button {
+    padding: 0 8px 0 6px;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck-dropdown.styles > .ck-dropdown__button .ck-button__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d3748;
+    font-variant: normal;
+    text-transform: none;
+    letter-spacing: 0;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck-dropdown.styles > .ck-dropdown__button .ck-icon {
+    color: #3182ce;
+}
+
+/* The last button ("more actions") had a pill-shaped right edge. */
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-dropdown.actions,
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-dropdown.actions > .ck-button {
+    border-radius: 6px !important;
+    margin-right: 0;
+}
+
+/* Dropdown panels opened from the toolbar. */
+html body .ck-body-wrapper .ck.ck-dropdown__panel {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+    overflow: hidden;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-toolbar .ck-dropdown__panel .ck-icon path {
+    color: #4a5568;
+}
+html body .ck-body-wrapper .ck.ck-list__item .ck-button {
+    border-radius: 0;
+}
+
+/* Block handle (the "¶" button to the left of an empty block). */
+html body .ck.ck.ck-button.ck-block-toolbar-button {
+    background: #ffffff;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    width: 22px;
+    height: 22px;
+    color: #718096;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+html body .ck.ck.ck-button.ck-block-toolbar-button > svg > path {
+    color: inherit;
+}
+html body .ck.ck.ck-button.ck-block-toolbar-button:hover,
+html body .ck.ck.ck-button.ck-block-toolbar-button.ck-on,
+html body .ck.ck.ck-button.ck-block-toolbar-button:active {
+    background: #ebf8ff !important;
+    border-color: #90cdf4 !important;
+    color: #2b6cb0;
+}
+html body .ck.ck.ck.ck.ck-dropdown.block > .ck-button {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #718096;
+}
+html body .ck.ck.ck.ck.ck-dropdown.block > .ck-button > svg > path {
+    color: inherit;
+}
+html body .ck.ck.ck.ck.ck-dropdown.block > .ck-button:hover,
+html body .ck.ck.ck.ck.ck-dropdown.block > .ck-button.ck-on {
+    background: #ebf8ff !important;
+    color: #2b6cb0;
+}
+
+/* Selected data variables: blue tint instead of purple. */
+html body .ck-content var.ck-widget_selected,
+html body .data-not-displayed .ck-content var.ck-widget_selected {
+    background-color: rgba(49, 130, 206, 0.1);
+    border-color: rgba(49, 130, 206, 0.1);
+}
+
+/* Tooltips. */
+html body .ck.ck.ck.ck-tooltip .ck-tooltip__text {
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+/* Space between the palette icon and the element name. */
+html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck-dropdown.styles > .ck-dropdown__button .ck-icon {
+    width: 14px;
+    height: 14px;
+    margin: 0 5px 0 0;
+}

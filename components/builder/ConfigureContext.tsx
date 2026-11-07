@@ -136,7 +136,7 @@ export function getAttributeSet(editor : Editor, context : ModelElement, {linkCo
         {
             key: 5,
             name: 'data-path-hidden',
-            label: 'Visiblity',
+            label: 'Visibility',
             icon: <ViewIcon width="24px" height="24px" />,
             value: editor.utils.getCustomAttribute(context, 'hidden'),
             jsonpath: context.getAttribute('data-path-hidden'),

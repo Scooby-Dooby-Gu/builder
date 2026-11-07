@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { CopyIcon, DeleteIcon, Input, Badge, IconButton, Container, HStack, Spacer, VStack, RepeatIcon, CloseIcon, Text } from "components/ui"
+import { CopyIcon, DeleteIcon, Input, Badge, IconButton, Container, HStack, Spacer, VStack, RepeatIcon, CloseIcon, Text, Tooltip } from "components/ui"
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {RootState} from "store/store";
 import { css } from "@chakra-ui/styled-system";
@@ -67,16 +67,21 @@ export default function Variant({ id, name, content, state, isDeleted } : Compon
                 {!isEditing && <EditLink href="#">{name}</EditLink>}
             </HStack>
             <Spacer />
-            <HStack spacing={0} className="menu">
-                {isDeleted && <Button aria-label="Restore variant" size="sm" variant="secondary" leftIcon={<CloseIcon />} onClick={() => dispatch(restoreVariant(id))}>Restore</Button>}
-                {!isDeleted && <IconButton color={"gray.500"} aria-label="Duplicate variant" icon={<CopyIcon w={6} h={6} />} onClick={() => dispatch(duplicateVariant(id))}  />}
-                {!isDeleted && <IconButton color={"gray.500"} aria-label="Delete variant" icon={<DeleteIcon w={6} h={6} />} onClick={() => dispatch(deleteVariant(id))}  />}
+            <HStack spacing={1} className="menu">
+                {isDeleted && <Button aria-label="Restore variant" size="xs" variant="secondary" leftIcon={<CloseIcon boxSize={2.5} />} onClick={() => dispatch(restoreVariant(id))}>Restore</Button>}
+                {!isDeleted && <Tooltip label="Duplicate variant" openDelay={300}>
+                    <IconButton size="xs" variant="ghost" color="gray.500" _hover={{ bg: "blackAlpha.100", color: "gray.800" }} aria-label="Duplicate variant" icon={<CopyIcon boxSize={3.5} />} onClick={() => dispatch(duplicateVariant(id))} />
+                </Tooltip>}
+                {!isDeleted && <Tooltip label="Delete variant" openDelay={300}>
+                    <IconButton size="xs" variant="ghost" color="gray.500" _hover={{ bg: "red.50", color: "red.600" }} aria-label="Delete variant" icon={<DeleteIcon boxSize={3.5} />} onClick={() => dispatch(deleteVariant(id))} />
+                </Tooltip>}
             </HStack>
         </HStack>
         {!isDeleted && <VStack className="variant-surface" background="white" borderRadius={3} minH={100} p={0}>
             <Container
                 px={5}
-                py={5}
+                pt="44px"
+                pb={6}
                 flexGrow={1}
                 placeholder={"Click and start typing"}
                 id={id}

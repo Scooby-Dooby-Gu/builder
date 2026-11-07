@@ -144299,7 +144299,7 @@ var ContextIndicatorView = /** @class */ (function (_super) {
                 }
             });
         });
-        _this.stylesDropdown.buttonView.bind('label').to(_this, 'nodeName');
+        _this.stylesDropdown.buttonView.bind('label').to(_this, 'nodeName', function (name) { var known = { $root: 'Variant', paragraph: 'Paragraph', heading1: 'Heading 1', heading2: 'Heading 2', heading3: 'Heading 3', imageBlock: 'Image', imageInline: 'Image', listItem: 'List item', blockQuote: 'Quote', table: 'Table', htmlDiv: 'Container', htmlDivParagraph: 'Container', htmlUl: 'List', htmlOl: 'List', htmlLi: 'List item', htmlVar: 'Variable', htmlA: 'Link', htmlFigure: 'Figure' }; if (!name) return ''; if (known[name]) return known[name]; var words = String(name).replace(/^html/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase(); return words.charAt(0).toUpperCase() + words.slice(1); });
         _this.contextToolbarView.items.addMany([_this.back, _this.stylesDropdown, _this.configureDropdown, _this.appendDropdown, _this.actionsDropdown]);
         _this = _super.call(this, locale, type, context) || this;
         _this.assignDOMListeners = function () {

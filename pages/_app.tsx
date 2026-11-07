@@ -1,4 +1,5 @@
 import type {AppProps} from 'next/app';
+import "../styles/editor-chrome.css";
 import dynamic from "next/dynamic";
 import {UIProvider, extendTheme, baseTheme} from "components/ui";
 import Head from "next/head";

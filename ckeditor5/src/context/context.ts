@@ -32,6 +32,19 @@ import { modelToDOMElement, viewToModelContext, modelToView } from '../utils/map
 import DropdownView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownview';
 import { getContextModel } from '../utils/getters';
 import { ResizeObserver } from '@ckeditor/ckeditor5-utils';
+
+// Readable label for the element shown in the context bar, e.g. heading1 -> "Heading 1".
+const KNOWN_NODE_NAMES: Record<string, string> = {
+    $root: 'Variant', paragraph: 'Paragraph', heading1: 'Heading 1', heading2: 'Heading 2', heading3: 'Heading 3',
+    imageBlock: 'Image', imageInline: 'Image', listItem: 'List item', blockQuote: 'Quote', table: 'Table', htmlDiv: 'Container',
+    htmlDivParagraph: 'Container', htmlUl: 'List', htmlOl: 'List', htmlLi: 'List item', htmlVar: 'Variable', htmlA: 'Link', htmlFigure: 'Figure',
+};
+function readableNodeName(name: string): string {
+    if (!name) return '';
+    if (KNOWN_NODE_NAMES[name]) return KNOWN_NODE_NAMES[name];
+    const words = String(name).replace(/^html/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
+    return words.charAt(0).toUpperCase() + words.slice(1);
+}
 export class IndicatorView extends View {
     targetModel: ModelElement
     rect: Rect
@@ -256,7 +269,7 @@ class ContextIndicatorView extends IndicatorView {
         });
 
 
-        this.stylesDropdown.buttonView.bind('label').to(this, 'nodeName')
+        this.stylesDropdown.buttonView.bind('label').to(this, 'nodeName', readableNodeName)
 
         this.contextToolbarView.items.addMany([this.back, this.stylesDropdown, this.configureDropdown, this.appendDropdown, this.actionsDropdown]);
 
