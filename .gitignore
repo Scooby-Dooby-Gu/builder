@@ -1,0 +1,11 @@
+.package-lock.json
+node_modules
+ckeditor5/builder
+ckeditor5/node_modules
+ckeditor5/build/ckeditor.js.map
+ckeditor5/build/translations
+.next
+**/.DS_Store
+.npmrc
+.idea
+.vercel

@@ -1,0 +1,18 @@
+[
+  {
+    "title": "TITLE",
+    "id": "12312332123",
+    "description": "DESC",
+    "preview": "PREVIEW",
+    "name": "Lobster",
+    "colors": ["red", "blue"]
+  },
+  {
+    "title": "TITLE 2",
+    "id": "123123123",
+    "description": "DESC2",
+    "preview": "PREVIEW 2",
+    "name": "Anton",
+    "colors": ["gold", "purple"]
+  }
+]

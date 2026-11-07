@@ -1,0 +1,312 @@
+
+.ck.ck {
+    .ck-indicator {
+      &.context {
+        &.ck-root {
+          .ck-tag .ck-disabled {
+            pointer-events: none;
+          }
+        }
+        &.ck-dragged {
+  
+          .ck-tag {
+            background: #ccc;
+            > :not(.ck-context__drag) {
+              display: none;
+            }
+          }
+        }
+        .ck-tag {
+          position: absolute;
+          height: 19px;
+          margin-bottom: -1px;;
+          margin-top: -21px;
+          margin-left: -3px;
+          padding: 0 0 0 0;
+          background: var(--ui-accent);
+          display: flex;
+          align-items: center;
+          border-radius: 3px 3px 0 0;
+          b {
+            color: #fff;
+            margin-left: 10px;
+            margin-right: 10px;
+            font-variant: small-caps;
+            text-transform: uppercase;
+            font-size: 10px;
+            padding-top: 2px;
+            font-weight: 500;
+          }
+        }
+  
+  
+        .ck-disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  
+  }
+  
+  .ck-dropdown.block,
+  .ck-dropdown.append,
+  .ck-dropdown.actions {
+    z-index: 10;
+    .ck-dropdown__panel {
+      transform: translateY(5px);
+    }
+  }
+  
+  .ck-tag.ck-tag.ck-tag {
+    position: relative;
+    .ck-dropdown, .ck-button {
+      pointer-events: all;
+    }
+  
+    .ck-toolbar.styler {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      position: absolute;
+      bottom: 25px;
+      left: 0;
+      width: auto;
+      &, &:first-child {
+        border-radius: 3px;  
+      }
+      .ck-toolbar__items {
+        flex-wrap: nowrap;
+      }
+    }
+  
+  }
+  
+  .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag {
+    .drag {
+      display: block;
+      pointer-events: all;
+      cursor: move;
+      height: 20px;
+      padding: 3px 0;
+      width: 30px;
+      margin: 0 -5px 0 -5px;
+    }
+    .ck-dropdown__button.actions,
+    .ck-dropdown__button.append {
+      height: 19px;
+      margin-top: -1px;
+      width: 30px;
+      padding: 0;
+      margin-right: -4px;;
+    }
+    .ck-toolbar.left > * > * > .ck-dropdown__button {
+      border: 0;
+      &.ck-on {
+        background-image: linear-gradient(to bottom, transparent 5px, rgba(0,0,0,0.2) 5px 23px, transparent 23px);
+        &:not(.label) {
+          background-position: 0 -2px;
+        }
+      }
+  
+      .ck-icon {
+        width: 30px;;
+        padding: 0;
+        height: 20px;
+      }
+      .ck-dropdown__arrow {
+        display: none;;
+      }
+    }
+    .ck-toolbar 
+    .ck-dropdown__panel {
+      border-radius: 3px;;
+      .ck-icon path {
+        color: #333;
+      }
+    }
+  
+    .ck-dropdown {
+      &.actions {
+        padding-right: 0;
+        margin-right: -4px;
+        border-radius: 0 11px 11px 0 !important;
+        > .ck-button {
+          border-radius: 0 11px 11px 0 !important;
+        }
+  
+        
+      }
+      &.append {
+        margin: 0;
+  
+        .ck-file-dialog-button {
+          width: 100%;
+        }
+      }
+      &.configure {
+        .ck-icon.ck-icon {
+          padding: 2px;
+        }
+      }
+      &.styles {
+        margin-left: 6px;
+  
+        > .ck-dropdown__panel {
+          transform: translateX(-53px);
+        }
+  
+        .ck-dropdown.ck-disabled {
+          display: none;
+        }
+  
+        > .ck-dropdown__button {
+          .ck-button__label {
+            width: auto;
+            margin-right:4px;
+    
+          }
+          .ck-icon {
+            height: 16px;
+            margin-right: -2px;
+            margin-left: -4px;
+          }
+        }
+      }
+    }
+  }
+  
+  
+  .ck.ck.ck.ck-dropdown.block  {
+    pointer-events: all;
+    position: absolute;
+    transform: translateX(-100%) translateY(0px) translateX(-6px);
+    > .ck-button {
+      background: var(--ui-accent);
+      border-radius:20px !important;
+      padding: 0  !important;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      min-height: 0;;
+      min-width: 0;;
+      &:active, &:hover , &.ck-on {
+        background:  var(--ui-accent) !important;
+        color: #fff;
+      }
+      > svg > path {
+        color: #fff;
+      }
+      > svg {
+        width: 15px;
+      }
+      .ck-dropdown__arrow {
+        display: none;;
+      }
+    }
+    .ck-splitbutton__action {
+      width: calc(100% - 16px);
+    }
+  }
+  
+  .ck-tag {
+    flex-wrap: nowrap;
+    display: flex;
+  }
+
+  .ck-toolbar .ck-dropdown__button{
+
+    white-space: nowrap;
+  }
+  
+  .ck-tag .ck.ck-toolbar.left {
+    background-color: transparent;;
+    border: 0;
+  
+    > .ck-toolbar__items {
+      flex-wrap: nowrap;
+      display: flex;
+    }
+    > .ck-toolbar__items >.ck-button,
+    > .ck-toolbar__items >.ck-dropdown > .ck-dropdown__button {
+      min-height: 0px;
+      &:not(.label) {
+        width: 20px;
+      }
+      cursor: pointer;
+      &.ck-button__drag {
+        cursor: move;
+      }
+  
+      &:active {
+      outline: none;
+      border-color: transparent;;
+  
+      }    
+  
+      background: transparent;
+      
+      .ck-icon path{
+        color: #333;
+      }
+  
+      &.back.back.back {
+        margin-right: -5px;
+      }
+      
+      .ck-icon {
+        path {
+          fill: #fff;
+        }
+      }
+      color: #fff;
+    }
+    
+  
+    .drag, .back {
+      .ck-icon {
+        path {
+          fill: #fff;
+        }
+        
+        padding: 1px 0;
+        height: 14px;
+        width: 16px;
+      }
+    }
+  }
+  
+  
+  
+  
+  .ck.ck-button.ck-block-toolbar-button {
+    background: var(--ui-accent);
+    border-radius: 3px 0 0 3px !important;
+    padding: 0  !important;
+    width: 20px;
+    height: 20px;
+    min-height: 0;;
+    min-width: 0;;
+    &:active, &:hover , &.ck-on {
+      background:  var(--ui-accent) !important;
+      color: #fff;
+    }
+    > svg > path {
+      color: #fff;
+    }
+    > svg {
+      width: 15px;
+    }
+  }
+  
+  .ck.ck.ck.ck-tooltip {
+      transition: opacity .15s ease-in-out .55s;
+  }
+  .ck.ck {
+    .ck-toolbar {
+  
+      &.document {
+        position: absolute;
+        right: 60px;
+        bottom: 80px;;
+      }
+    }
+  }

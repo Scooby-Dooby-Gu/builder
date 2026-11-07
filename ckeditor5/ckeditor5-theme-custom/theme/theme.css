@@ -1,0 +1,274 @@
+/*
+ * Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+
+
+ @import "./ui.css";
+
+:root {
+    --ui-accent: rgb(82, 72, 209);
+    --ck-color-resizer: rgb(82, 72, 209);
+    --ck-color-focus-border: rgb(82, 72, 209);
+    --ck-border-radius: 3px;
+    --ck-color-button-default-active-background: rgba(0, 0, 0, 0.1);
+
+    --ck-border-image-focus: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4 0H0V4H1V1H4V0ZM0 5V9H4V8H1V5H0ZM5 9H9V5H8V8H5V9ZM9 4V0H5V1H8V4H9Z' fill='rgba(82, 72, 209, .3)'/%3E%3C/svg%3E");
+    --ck-border-image: url("data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4 0H0V4H1V1H4V0ZM0 5V9H4V8H1V5H0ZM5 9H9V5H8V8H5V9ZM9 4V0H5V1H8V4H9Z' fill='%23D9D9D9'/%3E%3C/svg%3E");
+}
+.ck.ck.ck {
+
+    /* hide table selection handle*/
+    .ck-widget__selection-handle,
+    .ck-widget__type-around {
+        display: none;
+    }
+
+    /* Hide outline from widgets and table */
+    .image.ck-widget,
+    .image-inline.ck-widget,
+    .ck-widget__resizer,
+    .table.ck-widget {
+        outline: none;
+    }
+
+    /* Hide fake selection container since it messes up the layout s*/
+    &.ck-content .ck-fake-selection-container {
+        display: none;
+    }
+
+    &.ck-content {
+        .ck-repeated {
+            cursor: not-allowed;
+        }
+    }
+
+    /* Make symbol contents unclickable */
+    .ck-symbol[data-symbol-ref] {
+        outline-width: 0px;
+        ;
+
+        * {
+            pointer-events: none !important;
+        }
+    }
+}
+
+/* Content*/
+
+.ck-content blockquote {
+    overflow: visible;
+}
+
+.ck-content figure.image {
+    margin-bottom: 0;
+
+    &.image-style-side {
+        margin-top: 0;
+    }
+}
+
+.ck .table {
+    width: 100%;
+}
+
+.ck-content {
+    li, p, blockquote {
+      margin: 10px 0;
+    }
+    ul, ol {
+      margin: 20px 0;
+    }
+  
+    h2 {
+      font-size: 24px;
+      font-weight: bold;;
+    }
+    h3 {
+      font-size: 20px;
+      font-weight: bold;;
+    }
+    h4 {
+      font-size: 18px;
+      font-weight: bold;;
+    }
+    ul, ol {
+      margin-left: 20px;
+    }
+  }
+
+/* Make container cursor not be text */
+.ck-content div {
+    cursor: default;
+
+    p,
+    h1,
+    h2,
+    h3 {
+        cursor: text;
+    }
+
+}
+
+
+/* Data variables*/
+
+.data-not-displayed  .ck-content var > span,
+.ck-content var.ck-widget_selected > span ,
+.ck-content .ck-selected var > span  {
+    border: 2px solid;
+    border-image: var(--ck-border-image-focus);
+    //border-image-slice: 3.5;
+    border-image-slice: 5;
+    border-image-width: 7px;
+    border-image-outset: 0;
+}
+
+.data-not-displayed  .ck-content .ck-repeated var > span{
+    border-image-source: var(--ck-border-image);
+}
+.data-displayed  .ck-content .ck-repeated.ck-repeated var > span {
+    border-image-slice: 0;
+} 
+
+.hidden-displayed .ck-content {
+    [hidden] {
+        display: block !important;
+        opacity: 0.3;
+    }
+    var[hidden] {
+        display: inline !important;
+        opacity: 0.3;
+    }
+}
+.ck-content var {
+    &, > span {
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+    line-height: inherit;
+    border-radius: 0;
+    font-size: inherit;
+    font-style: inherit;;
+    outline: none !important;
+    transition: none !important;
+}
+
+.data-not-displayed .ck-content var, 
+.ck-content .ck-selected var, 
+.ck-content var.ck-widget_selected {
+    margin: -10px -2px;
+    border-radius: 0;
+}
+.ck-content var.ck-widget_selected >span,
+.ck-content .ck-selected var >span {
+    border-width: 1px;
+    border-image-outset: 1px;
+    margin: 0 -1px;
+    padding: 0 1px;
+}
+
+.ck-content var.ck-widget_selected,
+.ck-content .ck-selected var {
+    border-radius: 0;
+    border: 1px solid transparent;
+}
+
+.ck-content var.ck-widget_selected,
+.data-not-displayed .ck-content var.ck-widget_selected {
+    background-color:  rgba(82, 72, 209, .1);
+    border-color:  rgba(82, 72, 209, .1);
+}
+
+
+/* Custom plugin css*/
+
+.ck.ck.ck {
+    .ck-repeated * {
+        pointer-events: none !important;
+    }
+
+    /* Repeated clones */
+
+    .ck-current.ck-repeated {
+        &:before {
+            pointer-events: none;;
+            position: absolute;
+            content: '';
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            display: block;
+            background: repeating-linear-gradient(45deg,
+                    rgba(0, 0, 0, 0.05),
+                    rgba(0, 0, 0, 0.05) 20px,
+                    rgba(255, 255, 255, 0.05) 20px,
+                    rgba(255, 255, 255, 0.05) 40px);
+        }
+
+        position: relative;
+
+        .ck-repeated {
+            &:before {
+                content: none;
+            }
+        }
+    }
+
+    /* Symbol duplicates */
+    .ck-indicator.context.ck-symbol {
+        background: repeating-linear-gradient(45deg,
+                rgba(0, 0, 0, 0.05),
+                rgba(0, 0, 0, 0.05) 20px,
+                rgba(255, 255, 255, 0.05) 20px,
+                rgba(255, 255, 255, 0.05) 40px)
+    }
+
+
+    /* Dragge indicator*/
+
+    .ck-indicator-line {
+        position: absolute;
+        pointer-events: none;
+        background: var(--ui-accent);
+    }
+
+    .ck-indicator {
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .ck-indicator {
+        border-radius: 0 3px 3px 3px;
+        z-index: 1;
+    }
+
+    .ck-indicator.hover {
+        //outline: 1px dotted rgba(var(--ui-accent), 0.2);
+    }
+
+    .ck-indicator.focus {
+        /*background: var(--ui-accent);
+        opacity: 0.05;
+        outline-offset: -1px;
+        z-index: 3;*/
+    }
+
+    .ck-indicator.context {
+        outline: 1px dashed var(--ui-accent);
+        outline-offset: 2px;
+        border-radius: 0 3px 3px 3px;
+        z-index: 4;
+
+        &.ck-dragged {
+            outline-color: #ccc;
+        }
+    }
+
+    .ck-indicator.drop {
+        box-shadow: inset 0 0 2px 3px var(--ui-accent);
+        opacity: 0.25;
+    }
+}
