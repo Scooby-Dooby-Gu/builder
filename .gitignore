@@ -9,3 +9,4 @@ ckeditor5/build/translations
 .npmrc
 .idea
 .vercel
+.env*.local
