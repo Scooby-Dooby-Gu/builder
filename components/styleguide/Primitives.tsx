@@ -198,3 +198,44 @@ export function SpacingSection() {
         </>
     );
 }
+
+export function BreakpointsSection() {
+    const {system, update} = useStyleSystem();
+    const {openId, setOpenId, toggle} = useOpen();
+    const sorted = [...system.breakpoints].sort((a, b) => a.width - b.width);
+    const widest = Math.max(...sorted.map(b => b.width), 1);
+
+    return (
+        <SectionList kind="breakpoints" addLabel="Add breakpoint" onAdded={setOpenId}>
+            {sorted.map((bp, i) => (
+                <ItemCard
+                    key={bp.id}
+                    kind="breakpoints"
+                    item={bp}
+                    isOpen={openId === bp.id}
+                    onToggle={() => toggle(bp.id)}
+                    meta={i === 0 ? `${bp.width}px · smallest; base sizes apply here` : `${bp.width}px and wider`}
+                    preview={
+                        <Box w="full">
+                            <Box
+                                h="10"
+                                w={`${Math.max((bp.width / widest) * 100, 8)}%`}
+                                border="2px solid"
+                                borderColor="gray.300"
+                                borderRadius="md"
+                                bg="white"
+                                position="relative"
+                            >
+                                <Box position="absolute" top="1.5" left="2" right="2" h="1.5" bg="gray.200" borderRadius="full"/>
+                            </Box>
+                        </Box>
+                    }
+                    form={<>
+                        <TextField label="Name" value={bp.name} onChange={name => update("breakpoints", bp.id, {name})}/>
+                        <NumberField label="Width" unit="px" min={240} max={3840} step={8} value={bp.width} onChange={width => update("breakpoints", bp.id, {width})}/>
+                    </>}
+                />
+            ))}
+        </SectionList>
+    );
+}

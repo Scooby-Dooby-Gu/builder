@@ -1,7 +1,7 @@
 // The style system is built in layers. Each layer references the one below by id,
 // so changing a primitive flows through every preset and element that uses it.
 //
-//   primitives  colors, fonts, spacing, radii
+//   primitives  colors, fonts, spacing, radii, breakpoints
 //   presets     text styles (font + color + size/weight/line height)
 //   elements    buttons, links, cards (text styles + colors + spacing + radii)
 //   themes      a full look: background, heading/body text styles, link, button, card.
@@ -19,6 +19,7 @@ export type FontToken = {
     weights: number[],
 };
 export type SizeToken = { id: string, name: string, value: number };
+export type BreakpointToken = { id: string, name: string, width: number };
 export type TextStyle = {
     id: string,
     name: string,
@@ -28,6 +29,8 @@ export type TextStyle = {
     lineHeight: number,
     letterSpacing: number,
     uppercase: boolean,
+    // Font size from a breakpoint's width upward, by breakpoint id. `size` applies below them.
+    sizes?: Record<string, number>,
     colorId: string,
 };
 export type ButtonElement = {
@@ -82,6 +85,7 @@ export interface StyleSystem {
     fonts: FontToken[],
     spacing: SizeToken[],
     radii: SizeToken[],
+    breakpoints: BreakpointToken[],
     textStyles: TextStyle[],
     buttons: ButtonElement[],
     links: LinkElement[],
@@ -96,6 +100,7 @@ export const KIND_LABELS: Record<TokenKind, string> = {
     fonts: "font",
     spacing: "spacing step",
     radii: "radius",
+    breakpoints: "breakpoint",
     textStyles: "text style",
     buttons: "button",
     links: "link",
@@ -147,10 +152,16 @@ export const DEFAULT_SYSTEM: StyleSystem = {
         {id: "r-lg", name: "Large", value: 16},
         {id: "r-full", name: "Pill", value: 999},
     ],
+    breakpoints: [
+        {id: "bp-mobile", name: "Mobile", width: 375},
+        {id: "bp-tablet", name: "Tablet", width: 768},
+        {id: "bp-laptop", name: "Laptop", width: 1024},
+        {id: "bp-desktop", name: "Desktop", width: 1280},
+    ],
     textStyles: [
-        {id: "t-display", name: "Display", fontId: "f-lora", size: 44, weight: 700, lineHeight: 1.1, letterSpacing: -0.01, uppercase: false, colorId: "c-ink"},
-        {id: "t-title", name: "Title", fontId: "f-inter", size: 32, weight: 700, lineHeight: 1.2, letterSpacing: -0.01, uppercase: false, colorId: "c-ink"},
-        {id: "t-heading", name: "Heading", fontId: "f-inter", size: 24, weight: 600, lineHeight: 1.3, letterSpacing: -0.005, uppercase: false, colorId: "c-ink"},
+        {id: "t-display", name: "Display", fontId: "f-lora", size: 32, sizes: {"bp-tablet": 40, "bp-laptop": 48}, weight: 700, lineHeight: 1.1, letterSpacing: -0.01, uppercase: false, colorId: "c-ink"},
+        {id: "t-title", name: "Title", fontId: "f-inter", size: 26, sizes: {"bp-tablet": 32}, weight: 700, lineHeight: 1.2, letterSpacing: -0.01, uppercase: false, colorId: "c-ink"},
+        {id: "t-heading", name: "Heading", fontId: "f-inter", size: 21, sizes: {"bp-tablet": 24}, weight: 600, lineHeight: 1.3, letterSpacing: -0.005, uppercase: false, colorId: "c-ink"},
         {id: "t-subheading", name: "Subheading", fontId: "f-inter", size: 18, weight: 600, lineHeight: 1.4, letterSpacing: 0, uppercase: false, colorId: "c-ink"},
         {id: "t-body", name: "Body", fontId: "f-inter", size: 16, weight: 400, lineHeight: 1.6, letterSpacing: 0, uppercase: false, colorId: "c-slate"},
         {id: "t-caption", name: "Caption", fontId: "f-inter", size: 13, weight: 400, lineHeight: 1.4, letterSpacing: 0, uppercase: false, colorId: "c-muted"},
@@ -194,6 +205,7 @@ export function newItem(kind: TokenKind, id: string, system: StyleSystem): any {
         case "fonts": return {id, name: "Roboto", family: "Roboto", source: "google", fallback: "sans-serif", weights: [400]};
         case "spacing": return {id, name: `Step ${n}`, value: 48};
         case "radii": return {id, name: `Radius ${n}`, value: 12};
+        case "breakpoints": return {id, name: `Breakpoint ${n}`, width: 1440};
         case "textStyles": return {
             id, name: `Text style ${n}`, fontId: first("fonts"), size: 18, weight: 400, lineHeight: 1.5,
             letterSpacing: 0, uppercase: false, colorId: first("colors", "c-ink"),
@@ -246,6 +258,16 @@ export function colorValue(system: StyleSystem, id: string | null | undefined) {
 
 export function sizeValue(list: SizeToken[], id: string | null | undefined) {
     return find(list, id)?.value ?? 0;
+}
+
+// Size overrides for a text style, smallest breakpoint first.
+export function responsiveSizes(system: StyleSystem, id: string | null | undefined) {
+    const style = find(system.textStyles, id);
+    if (!style?.sizes) return [];
+    return system.breakpoints
+        .filter(b => style.sizes[b.id] != null)
+        .sort((x, y) => x.width - y.width)
+        .map(b => ({breakpoint: b, size: style.sizes[b.id]}));
 }
 
 export function textStyleCss(system: StyleSystem, id: string | null | undefined): CSSProperties {
@@ -341,6 +363,7 @@ export function usagesOf(system: StyleSystem, kind: TokenKind, id: string): Usag
         };
         if (refs[kind]?.includes(id)) add("themes", t);
     });
+    if (kind === "breakpoints") system.textStyles.forEach(t => t.sizes?.[id] != null && add("textStyles", t));
     if (kind === "textStyles") {
         system.buttons.forEach(b => b.textStyleId === id && add("buttons", b));
         system.links.forEach(l => l.textStyleId === id && add("links", l));
@@ -399,6 +422,8 @@ export function generateCss(system: StyleSystem) {
     system.fonts.forEach(x => lines.push(`  --font-${f[x.id]}: ${fontStack(x)};`));
     system.spacing.forEach(x => lines.push(`  --space-${s[x.id]}: ${x.value}px;`));
     system.radii.forEach(x => lines.push(`  --radius-${r[x.id]}: ${x.value}px;`));
+    const bp = slugMap(system.breakpoints);
+    system.breakpoints.forEach(x => lines.push(`  --breakpoint-${bp[x.id]}: ${x.width}px;`));
     lines.push("}", "");
 
     const textDecls = (id: string) => {
@@ -424,6 +449,9 @@ export function generateCss(system: StyleSystem) {
         ...textDecls(ts.id),
         color(ts.colorId) && `color: ${color(ts.colorId)};`,
     ]));
+    system.textStyles.forEach(ts => responsiveSizes(system, ts.id).forEach(({breakpoint, size}) => {
+        lines.push(`@media (min-width: ${breakpoint.width}px) { .text-${t[ts.id]} { font-size: ${size}px; } } /* ${breakpoint.name} */`);
+    }));
     lines.push("");
 
     lines.push("/* Elements */");
@@ -501,13 +529,25 @@ export function themeCss(system: StyleSystem, theme: ThemeToken, scope: string) 
         if (decls) rules.push(`${selectors.map(s => `${scope} ${s}`.trim()).join(", ")} { ${decls} }`);
     };
     const s = (sel: string) => [sel];
+    // Responsive sizes follow the width of the themed element (a container query),
+    // so the builder's breakpoint preview resizes text even in a wide window.
+    const sized = (selectors: string[], styleId: string | null | undefined) => {
+        responsiveSizes(system, styleId).forEach(({breakpoint, size}) => {
+            rules.push(`@container (min-width: ${breakpoint.width}px) { ${selectors.map(sel => `${scope} ${sel}`.trim()).join(", ")} { font-size: ${size}px; } }`);
+        });
+    };
 
-    rule(s(""), {...textStyleCss(system, theme.bodyStyleId), background: colorValue(system, theme.backgroundId)});
+    rule(s(""), {...textStyleCss(system, theme.bodyStyleId), background: colorValue(system, theme.backgroundId), containerType: "inline-size"} as CSSProperties);
     rule(["h1", ".typography-heading"], {...textStyleCss(system, theme.h1StyleId), margin: "0 0 0.5em"});
+    sized(["h1", ".typography-heading"], theme.h1StyleId);
     rule(["h2"], {...textStyleCss(system, theme.h2StyleId), margin: "1em 0 0.4em"});
+    sized(["h2"], theme.h2StyleId);
     rule(["h3", "h4"], {...textStyleCss(system, theme.h3StyleId), margin: "1em 0 0.3em"});
+    sized(["h3", "h4"], theme.h3StyleId);
     rule(["p", "li", ".typography-copy"], {...textStyleCss(system, theme.bodyStyleId)});
+    sized(["p", "li", ".typography-copy"], theme.bodyStyleId);
     rule([".typography-accent"], {...textStyleCss(system, theme.accentStyleId), background: "none", padding: 0, fontVariant: "normal"});
+    sized([".typography-accent"], theme.accentStyleId);
 
     const link = find(system.links, theme.linkId);
     if (link) {
@@ -528,6 +568,8 @@ export function themeCss(system: StyleSystem, theme: ThemeToken, scope: string) 
         rule([".container > h1", ".container > h2", "[class*='card-'] > h1", "[class*='card-'] > h2"],
             {...textStyleCss(system, card.titleStyleId), marginTop: 0});
         rule([".container p", "[class*='card-'] p"], textStyleCss(system, card.bodyStyleId));
+        sized([".container > h1", ".container > h2", "[class*='card-'] > h1", "[class*='card-'] > h2"], card.titleStyleId);
+        sized([".container p", "[class*='card-'] p"], card.bodyStyleId);
     }
     // Repeated class matches the builder's own `.tag.tag.tag.tag.tag` rule so the theme wins.
     rule([".tag.tag.tag.tag.tag"], {
@@ -549,4 +591,17 @@ export function themeClass(system: StyleSystem, theme: ThemeToken) {
 // Basic shape check for state restored from localStorage.
 export function isStyleSystem(value: any): value is StyleSystem {
     return value && (Object.keys(DEFAULT_SYSTEM) as TokenKind[]).every(k => Array.isArray(value[k]));
+}
+
+// Saved style guides from before a layer existed get that layer's defaults,
+// so adding a layer never wipes someone's work.
+export function withMissingLayers(value: any): StyleSystem | null {
+    if (!value || typeof value !== "object") return null;
+    const core: TokenKind[] = ["colors", "fonts", "spacing", "radii", "textStyles"];
+    if (!core.every(k => Array.isArray(value[k]))) return null;
+    const out = {...value};
+    (Object.keys(DEFAULT_SYSTEM) as TokenKind[]).forEach(k => {
+        if (!Array.isArray(out[k])) out[k] = JSON.parse(JSON.stringify(DEFAULT_SYSTEM[k]));
+    });
+    return out as StyleSystem;
 }

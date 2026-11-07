@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {v4 as uuidv4} from "uuid";
-import {DEFAULT_SYSTEM, isStyleSystem, newItem, StyleSystem, TokenKind, usagesOf} from "utils/styleSystem";
+import {DEFAULT_SYSTEM, newItem, StyleSystem, TokenKind, usagesOf, withMissingLayers} from "utils/styleSystem";
 
 export const STORAGE_KEY = "builder.styleSystem.v1";
 
@@ -18,9 +18,8 @@ function loadSaved(): StylesState {
     try {
         if (typeof window !== "undefined") {
             const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
-            if (saved && isStyleSystem(saved.system)) {
-                return {system: saved.system, componentThemes: saved.componentThemes ?? {}};
-            }
+            const system = withMissingLayers(saved?.system);
+            if (system) return {system, componentThemes: saved.componentThemes ?? {}};
         }
     } catch {
         // Ignore unreadable saved state and fall back to defaults.

@@ -3,6 +3,7 @@ import {useRouter} from "next/router";
 import ComponentUpperInfo from "./ComponentUpperInfo";
 import {Datasource} from "../../../models/datasource";
 import StateBadge from "../../StateBadge";
+import ThemeBadge from "./ThemeBadge";
 import {Flex, Image} from "components/ui";
 import {States} from "../../../models/collection";
 
@@ -50,10 +51,13 @@ const ComponentUpper: FunctionComponent<Props> = (props: Props): ReactElement =>
             <Flex
                 pos="absolute"
                 top="2xl"
+                gap="2"
+                zIndex={1}
             >
                 <StateBadge
                     state={state}
                 />
+                <ThemeBadge componentId={componentId}/>
             </Flex>
 
             {showInfo ?

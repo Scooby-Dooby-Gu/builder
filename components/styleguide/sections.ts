@@ -6,11 +6,12 @@ import {
     mdiFormatSize,
     mdiGestureTapButton,
     mdiLinkVariant,
+    mdiMonitorCellphone,
     mdiPalette,
     mdiPaletteSwatchOutline,
 } from "@mdi/js";
 
-export type SectionId = "colors" | "fonts" | "spacing" | "text" | "buttons" | "links" | "cards" | "themes" | "css";
+export type SectionId = "colors" | "fonts" | "spacing" | "breakpoints" | "text" | "buttons" | "links" | "cards" | "themes" | "css";
 
 export interface SectionInfo {
     id: SectionId,
@@ -35,6 +36,7 @@ export const LAYERS: Layer[] = [
             {id: "colors", label: "Colors", icon: mdiPalette, description: "The palette. Text styles and elements pick their colors from here."},
             {id: "fonts", label: "Fonts", icon: mdiFormatFont, description: "Font families, loaded from Google Fonts or the system."},
             {id: "spacing", label: "Spacing & radii", icon: mdiArrowExpandHorizontal, description: "Scales for padding and corner rounding, used by elements."},
+            {id: "breakpoints", label: "Breakpoints", icon: mdiMonitorCellphone, description: "Screen widths where layouts change. Text styles can resize at each one, and the builder previews components at these widths."},
         ],
     },
     {

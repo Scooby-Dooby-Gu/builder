@@ -4,7 +4,7 @@ import {useRouter} from "next/router";
 import Navbar from "components/Navbar";
 import StyleSidebar from "components/styleguide/StyleSidebar";
 import {layerOf, LAYERS, SectionId, SECTIONS} from "components/styleguide/sections";
-import {ColorsSection, FontsSection, SpacingSection} from "components/styleguide/Primitives";
+import {BreakpointsSection, ColorsSection, FontsSection, SpacingSection} from "components/styleguide/Primitives";
 import {TextStylesSection} from "components/styleguide/Presets";
 import {ButtonsSection, CardsSection, LinksSection} from "components/styleguide/Elements";
 import {CssSection} from "components/styleguide/CssOutput";
@@ -17,6 +17,7 @@ const CONTENT: Record<SectionId, React.FC> = {
     colors: ColorsSection,
     fonts: FontsSection,
     spacing: SpacingSection,
+    breakpoints: BreakpointsSection,
     text: TextStylesSection,
     buttons: ButtonsSection,
     links: LinksSection,
@@ -41,7 +42,7 @@ function LayerFlow({activeLayer}: { activeLayer?: string }) {
                         color={layer.id === activeLayer ? "blue.700" : "gray.500"}
                         fontWeight={layer.id === activeLayer ? "semibold" : "normal"}
                     >
-                        {i + 1}. {layer.label}
+                        {layer.label}
                     </Text>
                 </React.Fragment>
             ))}

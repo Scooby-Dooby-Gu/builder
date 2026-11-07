@@ -2,8 +2,33 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Box, Divider, FormControl, FormLabel , HStack, NativeSelect, Switch, Text, Tooltip } from "components/ui";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { setDataDisplayed, setDataRepeated, setHiddenDisplayed } from "store/slices/builderSlice";
+import { setDataDisplayed, setDataRepeated, setHiddenDisplayed, setPreviewBreakpoint } from "store/slices/builderSlice";
 import { setComponentTheme } from "store/slices/stylesSlice";
+
+// Preview the component at one of the style guide's breakpoints.
+function PreviewWidthPicker() {
+    const dispatch = useAppDispatch();
+    const breakpoints = useAppSelector((state) => state.styles.system.breakpoints);
+    const selected = useAppSelector((state) => state.builder.previewBreakpointId ?? "");
+    const sorted = [...breakpoints].sort((a, b) => a.width - b.width);
+
+    return <FormControl display="flex" alignItems="center" width="auto">
+        <FormLabel mb="0" htmlFor="select-preview-width">
+            Preview
+        </FormLabel>
+        <NativeSelect
+            id="select-preview-width"
+            size="sm"
+            width="44"
+            bg="white"
+            value={selected}
+            onChange={(e) => dispatch(setPreviewBreakpoint(e.target.value || null))}
+        >
+            <option value="">Default width</option>
+            {sorted.map((bp) => <option key={bp.id} value={bp.id}>{bp.name} · {bp.width}px</option>)}
+        </NativeSelect>
+    </FormControl>
+}
 
 // Pick the style guide theme that styles this component's variants.
 function ThemePicker() {
@@ -46,6 +71,7 @@ export default function EditorHeader() {
     
     return <HStack justifyContent="center" spacing={8} py={8} background="gray.100" flexWrap="wrap" rowGap={4}>
         <ThemePicker />
+        <PreviewWidthPicker />
         <Box alignSelf="stretch"><Divider orientation="vertical" borderColor="gray.300" /></Box>
         <Tooltip label="Not implemented">
             <FormControl display="flex" alignItems="center" width="auto" isDisabled={true}>

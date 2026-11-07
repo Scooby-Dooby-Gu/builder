@@ -42,16 +42,24 @@ export default function Variant({ id, name, content, state, isDeleted } : Compon
     const dispatch = useAppDispatch();
     const focusedEditableName = useAppSelector((state: RootState) => state.builder.focusedEditableName);
     const builderIsFocused = useAppSelector((state: RootState) => state.builder.isFocused);
+    // Width of the style guide breakpoint being previewed, if any.
+    const previewWidth = useAppSelector((state: RootState) => {
+        const id = state.builder.previewBreakpointId;
+        return id ? state.styles.system.breakpoints.find((bp) => bp.id === id)?.width ?? null : null;
+    });
 
 
     return <Container key={id} css={css`
         &:not(:hover):not(.focused) .menu {
             opacity: 0;
         }
-        & {
-            max-width: 600px;
-        }
-    `} className={`${builderIsFocused && focusedEditableName == id ? 'focused' : ''}`}>
+    `}
+        maxW={previewWidth ? "none" : "600px"}
+        w={previewWidth ? `${previewWidth}px` : undefined}
+        // No side padding while previewing, so the themed content is exactly the breakpoint's width.
+        px={previewWidth ? 0 : undefined}
+        flexShrink={0}
+        className={`${builderIsFocused && focusedEditableName == id ? 'focused' : ''}`}>
         <HStack width="100%">
             <HStack minWidth={0}>
                 <VariantBadge state={isDeleted ? 'deleting' : state} />

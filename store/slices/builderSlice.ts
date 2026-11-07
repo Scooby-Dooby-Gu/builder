@@ -18,7 +18,9 @@ type BuilderState = {
     isDataDisplayed: boolean,
     isDataRepeated: boolean,
     hasData: boolean,
-    hasRepeating: boolean
+    hasRepeating: boolean,
+    // Style guide breakpoint the canvas previews at; null fits the default width.
+    previewBreakpointId: string | null
 }
 
 
@@ -198,7 +200,8 @@ const initialState: BuilderState = {
     isDataDisplayed: true,
     isDataRepeated: true,
     hasData: true,
-    hasRepeating: true
+    hasRepeating: true,
+    previewBreakpointId: null
 }
 
 interface moveVariant {
@@ -265,6 +268,9 @@ export const builderSlice = createSlice({
         },
         setHiddenDisplayed: (state, action: PayloadAction<boolean>) => {
             state.isHiddenDisplayed = action.payload;
+        },
+        setPreviewBreakpoint: (state, action: PayloadAction<string | null>) => {
+            state.previewBreakpointId = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -284,7 +290,8 @@ export const {
     setDocumentVersion,
     setDataRepeated,
     setDataDisplayed,
-    setHiddenDisplayed
+    setHiddenDisplayed,
+    setPreviewBreakpoint
 } = builderSlice.actions;
 
 export default builderSlice.reducer;
