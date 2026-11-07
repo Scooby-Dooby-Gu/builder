@@ -54,7 +54,7 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
     </style>
     <EditorWatchdog {...{ node, editor, variants, setEditor }} />
     <EditorHeader />
-    <VStack className={`${isDataDisplayed ? 'data-displayed' : 'data-not-displayed'} ${isHiddenDisplayed ? 'hidden-displayed' : 'hidden-not-displayed'}`} onContextMenu={(e) => e.preventDefault()} flexGrow={1} key="editor" pt={10} pb={10} px={6} background="gray.100" spacing="20" onMouseDownCapture={onMouseDown} overflowX="auto" alignItems="safe center">
+    <VStack className={`${isDataDisplayed ? 'data-displayed' : 'data-not-displayed'} ${isHiddenDisplayed ? 'hidden-displayed' : 'hidden-not-displayed'}`} onContextMenu={(e) => e.preventDefault()} flexGrow={1} key="editor" pt={10} pb={10} px={6} background="gray.100" spacing="20" onMouseDownCapture={onMouseDown} alignItems="safe center">
       <VStack spacing={10} ref={setRef} className="builder-theme" alignItems="safe center" maxW="full">
         {editableElements}
       </VStack>

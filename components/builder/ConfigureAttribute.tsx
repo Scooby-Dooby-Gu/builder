@@ -81,7 +81,7 @@ export default function ConfigureAttribute(
     const DataMapping = <>
         <FormControl zIndex={2}>
             <FormLabel>Data source</FormLabel>
-            <Select options={values} value={value} />
+            <Select size="sm" options={values} value={value} />
         </FormControl>
         <br />
         <FormControl display={"flex"} alignItems="center" float="right" width="auto" zIndex={"1"}>

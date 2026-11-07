@@ -203,3 +203,93 @@ html body .ck-body-wrapper .ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag.ck-tag .ck
     height: 14px;
     margin: 0 5px 0 0;
 }
+
+/*
+ * One menu style for every dropdown opened from the element toolbar: add (+),
+ * more actions (…) and configure (gear). The first two are CKEditor vertical
+ * toolbars; configure is a React panel styled to the same rows in Configure.tsx.
+ */
+html body .ck-body-wrapper .ck-tag .ck.ck-dropdown__panel {
+    padding: 4px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14), 0 1px 3px rgba(15, 23, 42, 0.06);
+    overflow: visible;
+}
+html body .ck-body-wrapper .ck-tag .ck.ck-dropdown__panel > .ck.ck-toolbar {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+}
+html body .ck-body-wrapper .ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical {
+    min-width: 200px;
+}
+html body .ck-body-wrapper .ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical > .ck-toolbar__items {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1px;
+}
+html body .ck-body-wrapper .ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical > .ck-toolbar__items > * {
+    width: 100%;
+    margin: 0;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-button,
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-splitbutton > .ck-button {
+    height: 32px;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 6px !important;
+    background: transparent;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    cursor: pointer;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical > .ck-toolbar__items > .ck-button {
+    width: 100%;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-button:hover:not(.ck-disabled),
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-button.ck-on {
+    background: #edf2f7;
+    color: #1a202c;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-button .ck-button__icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-button .ck-button__label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    color: inherit;
+    padding: 0;
+}
+/* Split buttons ("Insert media ▾"): the action fills the row, the arrow stays compact. */
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-splitbutton {
+    display: flex;
+    width: 100%;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-splitbutton > .ck-splitbutton__action {
+    flex: 1;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-splitbutton > .ck-splitbutton__arrow {
+    width: 28px;
+    padding: 0;
+    justify-content: center;
+}
+html body .ck-body-wrapper .ck-tag.ck-tag .ck.ck-dropdown__panel > .ck-toolbar_vertical .ck.ck-splitbutton > .ck-splitbutton__arrow::after {
+    display: none;
+}
+/* Delete is the last action; it turns red on hover. */
+html body .ck-body-wrapper .ck-tag.ck-tag .ck-dropdown.actions .ck.ck-dropdown__panel > .ck-toolbar_vertical > .ck-toolbar__items > .ck-button:last-child:hover {
+    background: #fff5f5;
+    color: #c53030;
+}
