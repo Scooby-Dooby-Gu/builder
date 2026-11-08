@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import {mdiDatabaseOutline} from "@mdi/js";
-import {Box, Flex, Icon, Text} from "components/ui";
+import {AddIcon, Box, Button, Flex, Icon, Text} from "components/ui";
 import {Datasource} from "models/datasource";
 
-export default function DatasourceSidebar({datasources, activeId}: { datasources: Datasource[], activeId?: string }) {
+export default function DatasourceSidebar({datasources, activeId, onAdd}: { datasources: Datasource[], activeId?: string, onAdd: () => void }) {
     return (
         <Box
             as="aside"
@@ -19,6 +19,11 @@ export default function DatasourceSidebar({datasources, activeId}: { datasources
             <Text px="5" mb="2" fontSize="xs" fontWeight="semibold" letterSpacing="wider" textTransform="uppercase" color="gray.500">
                 Data sources
             </Text>
+            <Box px="3" mb="4">
+                <Button size="sm" variant="secondary" leftIcon={<AddIcon/>} w="full" onClick={onAdd}>
+                    Add API source
+                </Button>
+            </Box>
             <Box as="nav" px="2">
                 {datasources.map(ds => {
                     const isActive = ds.id === activeId;

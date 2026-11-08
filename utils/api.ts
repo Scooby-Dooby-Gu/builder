@@ -102,6 +102,10 @@ export interface Session {
 
 export const fetchSession = () => fetch(`${baseURL}/auth/session`).then(res => json<Session>(res));
 
+export const fetchDatasources = () => fetch(`${baseURL}/datasources`).then(res => json<import("models/datasource").Datasource[]>(res));
+export const testDatasource = (config: object) => fetch(`${baseURL}/datasources/test`, {method: "POST", body: JSON.stringify(config)}).then(res => json<{sample: unknown}>(res));
+export const createDatasource = (config: object) => fetch(`${baseURL}/datasources`, {method: "POST", body: JSON.stringify(config)}).then(res => json<import("models/datasource").Datasource>(res));
+
 export const signIn = (password: string) =>
     fetch(`${baseURL}/auth/login`, {method: "POST", body: JSON.stringify({password})}).then(res => json<Session>(res));
 

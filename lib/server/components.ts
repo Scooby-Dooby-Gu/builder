@@ -52,6 +52,7 @@ export interface PublishedComponent {
     css: string,
     fontUrls: string[],
     data: Record<string, unknown>,
+    liveDatasourceIds: string[],
 }
 
 // Limits that keep storage bounded. Sandboxes get less room than the live data.
@@ -238,6 +239,9 @@ export function validateSnapshot(body: any): Omit<PublishedComponent, "id" | "ve
         fontUrls: (Array.isArray(body?.fontUrls) ? body.fontUrls : []).map(String)
             .filter((u: string) => /^https:\/\/fonts\.googleapis\.com\//.test(u)).slice(0, 10),
         data: body?.data && typeof body.data === "object" && !Array.isArray(body.data) ? body.data : {},
+        liveDatasourceIds: Array.isArray(body?.liveDatasourceIds)
+            ? [...new Set<string>(body.liveDatasourceIds.map((id: unknown) => String(id).slice(0, 100)))].slice(0, 20)
+            : [],
     };
     if (JSON.stringify(snapshot).length > LIMITS.publishChars) {
         throw new HttpError(413, "This component is too large to publish.");
@@ -252,6 +256,7 @@ export async function publish(ns: Namespace, id: string, snapshot: ReturnType<ty
         : await increment(versionKey(ns, id));
     const published: PublishedComponent = {
         ...snapshot,
+        liveDatasourceIds: ns.kind === "owner" ? snapshot.liveDatasourceIds : [],
         id,
         name: component.name,
         version,

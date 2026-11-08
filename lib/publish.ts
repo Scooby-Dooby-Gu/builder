@@ -40,9 +40,13 @@ export function buildSnapshot({variants, system, themeId, datasources}: {
     const ids = new Set<string>();
     published.forEach(v => referencedDatasourceIds(v.html).forEach(id => ids.add(id)));
     const data: Record<string, unknown> = {};
+    const liveDatasourceIds: string[] = [];
     ids.forEach(id => {
         const ds = datasources.find(d => String(d.id) === id);
-        if (ds) data[id] = ds.sample;
+        if (ds) {
+            data[id] = ds.sample;
+            if (ds.live) liveDatasourceIds.push(id);
+        }
     });
 
     const fontUrls = theme
@@ -55,6 +59,7 @@ export function buildSnapshot({variants, system, themeId, datasources}: {
         css: [componentBaseCss(EMBED_ROOT), CONTENT_CSS, theme ? themeCss(system, theme, EMBED_ROOT) : ""].join("\n"),
         fontUrls,
         data,
+        liveDatasourceIds,
     };
 }
 

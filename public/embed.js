@@ -47,6 +47,14 @@
         return requests[key];
     }
 
+    function loadLiveData(origin, id, published) {
+        if (!published.liveDatasourceIds || !published.liveDatasourceIds.length) return Promise.resolve({});
+        return fetch(origin + "/api/components/" + encodeURIComponent(id) + "/data", {mode: "cors", cache: "no-store"})
+            .then(function (res) { return res.ok ? res.json() : {}; })
+            .then(function (result) { return result.data || {}; })
+            .catch(function () { return {}; });
+    }
+
     var fontsAdded = {};
     // Fonts declared inside a shadow root aren't reliably applied, so they go on the page.
     function addFonts(urls) {
@@ -186,7 +194,7 @@
         el.remove();
     }
 
-    function render(published, variantName, origin) {
+    function render(published, variantName, origin, liveData) {
         var variants = published.variants || [];
         var variant = variants.find(function (v) { return v.name === variantName || v.id === variantName; }) || variants[0];
         var root = document.createElement("div");
@@ -199,7 +207,7 @@
         sanitize(template.content);
         root.appendChild(template.content);
 
-        var scopes = Object.assign({}, published.data || {});
+        var scopes = Object.assign({}, published.data || {}, liveData || {});
         Array.prototype.slice.call(root.children).forEach(function (child) { populate(child, scopes); });
 
         // Site-relative images (e.g. /marketing/logo.svg) live on the Builder site,
@@ -248,13 +256,15 @@
         }
         this.setAttribute("aria-busy", "true");
         loadComponent(origin, id, this.hasAttribute("preview")).then(function (published) {
+            return loadLiveData(origin, id, published).then(function (liveData) {
             if (self._token !== token) return;
             addFonts(published.fontUrls);
             var style = document.createElement("style");
             style.textContent = published.css || "";
-            self.shadowRoot.replaceChildren(style, render(published, self.getAttribute("variant"), origin));
+            self.shadowRoot.replaceChildren(style, render(published, self.getAttribute("variant"), origin, liveData));
             self.removeAttribute("aria-busy");
             self.dispatchEvent(new CustomEvent("builder:load", {detail: {id: id, version: published.version}}));
+            });
         }).catch(function (error) {
             if (self._token !== token) return;
             self.removeAttribute("aria-busy");

@@ -9,6 +9,7 @@ import FontLinks from "components/styleguide/FontLinks";
 import {useEffect} from "react";
 import {useAppDispatch} from "store/hooks";
 import {loadSession} from "store/slices/sessionSlice";
+import {loadDatasources} from "store/slices/datasourcesSlice";
 
 const globalStyles = {
     styles: {
@@ -60,6 +61,7 @@ function SessionLoader() {
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(loadSession());
+        dispatch(loadDatasources());
     }, [dispatch]);
     return null;
 }
