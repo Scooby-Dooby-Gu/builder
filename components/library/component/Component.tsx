@@ -67,7 +67,6 @@ const Component: FunctionComponent<Props> = (props: Props): ReactElement | null 
                 thumbnail={thumbnail}
                 showInfo={showInfo}
                 dataSources={dataSources}
-                state={state}
             />
 
             <ComponentLower
@@ -76,6 +75,7 @@ const Component: FunctionComponent<Props> = (props: Props): ReactElement | null 
                 description={description}
                 setShowInfo={setShowInfo}
                 title={title}
+                state={state}
                 collectionId={collectionId}
                 componentId={id}
             />
