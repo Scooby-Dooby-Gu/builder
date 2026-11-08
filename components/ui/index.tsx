@@ -25,6 +25,7 @@ import {
     MenuItem,
     MenuList,
     Text,
+    Tooltip,
     theme as chakraTheme,
 } from "@chakra-ui/react";
 import {PopoverTrigger as ChakraPopoverTrigger} from "@chakra-ui/react";
@@ -150,7 +151,7 @@ export function Placeholder({title, text}: { title?: ReactNode, text?: ReactNode
 }
 
 type NavItem = { label: string, active?: boolean, onClick?: () => void };
-type NavAction = { ariaLabel: string, icon: ReactElement, active?: boolean, onClick?: () => void };
+type NavAction = { ariaLabel: string, icon: ReactElement, tooltip?: string, active?: boolean, onClick?: () => void };
 
 export function NavigationHorizontal({items = [], actions = [], icon, image, brand, menu}: {
     items?: NavItem[],
@@ -188,14 +189,15 @@ export function NavigationHorizontal({items = [], actions = [], icon, image, bra
 
             <HStack spacing="2">
                 {actions.map(action => (
-                    <IconButton
-                        key={action.ariaLabel}
-                        aria-label={action.ariaLabel}
-                        icon={action.icon}
-                        variant="ghost"
-                        isActive={action.active}
-                        onClick={action.onClick}
-                    />
+                    <Tooltip key={action.ariaLabel} label={action.tooltip} placement="bottom" hasArrow>
+                        <IconButton
+                            aria-label={action.ariaLabel}
+                            icon={action.icon}
+                            variant="ghost"
+                            isActive={action.active}
+                            onClick={action.onClick}
+                        />
+                    </Tooltip>
                 ))}
 
                 {menu && (

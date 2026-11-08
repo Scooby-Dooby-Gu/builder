@@ -15,8 +15,10 @@ const Navbar: FunctionComponent<{}> = (props: {}): ReactElement => {
 
     const actions = [
         {
-            active: false, ariaLabel: 'Toggle Drawer', icon: <QuestionOutlineIcon/>, onClick: () => {
-            }
+            active: false,
+            ariaLabel: 'About this demo',
+            tooltip: "A working demo of Mason’s Front-End-As-A-Service.",
+            icon: <QuestionOutlineIcon/>,
         }
     ];
 
