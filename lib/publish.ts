@@ -4,18 +4,16 @@
 import {ComponentVariant} from "models/builder";
 import {Datasource} from "models/datasource";
 import {find, googleFontsUrl, StyleSystem, themeCss} from "utils/styleSystem";
+import {componentBaseCss} from "lib/componentCss";
 
 // The root element embed.js renders into; theme CSS is scoped to it.
 export const EMBED_ROOT = ".builder-root";
 
-// Content defaults the editor normally provides (images, figures, data variables).
+// Small extras the editor provides in the canvas (side images, variables, hidden elements).
 const CONTENT_CSS = `
 ${EMBED_ROOT} { display: block; }
-${EMBED_ROOT} img { max-width: 100%; height: auto; display: block; }
-${EMBED_ROOT} figure.image { margin: 0 0 1em; }
 ${EMBED_ROOT} figure.image-style-side { float: right; max-width: 50%; margin: 0 0 1em 1.5em; }
 ${EMBED_ROOT} var { font-style: inherit; }
-${EMBED_ROOT} ul { padding-left: 0; list-style: none; }
 ${EMBED_ROOT} [hidden] { display: none !important; }
 ${EMBED_ROOT}::after { content: ""; display: table; clear: both; }
 `;
@@ -27,12 +25,11 @@ function referencedDatasourceIds(html: string) {
     return ids;
 }
 
-export function buildSnapshot({variants, system, themeId, datasources, builderStyles}: {
+export function buildSnapshot({variants, system, themeId, datasources}: {
     variants: (ComponentVariant & { html?: string })[],
     system: StyleSystem,
     themeId: string | null | undefined,
     datasources: Datasource[],
-    builderStyles: string,
 }) {
     const published = variants
         .filter(v => !v.isDeleted)
@@ -55,7 +52,7 @@ export function buildSnapshot({variants, system, themeId, datasources, builderSt
     return {
         themeName: theme?.name ?? null,
         variants: published,
-        css: [builderStyles, CONTENT_CSS, theme ? themeCss(system, theme, EMBED_ROOT) : ""].join("\n"),
+        css: [componentBaseCss(EMBED_ROOT), CONTENT_CSS, theme ? themeCss(system, theme, EMBED_ROOT) : ""].join("\n"),
         fontUrls,
         data,
     };

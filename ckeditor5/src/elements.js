@@ -81,6 +81,11 @@ class InsertContent extends Plugin {
     editor.model.schema.extend('listItem', {
       allowAttributes: 'class'
     });
+    // Text blocks (paragraphs, headings) take classes too: the Button and
+    // Typography pickers style them.
+    editor.model.schema.extend('$block', {
+      allowAttributes: 'class'
+    });
     editor.model.schema.extend('$container', {
       allowAttributes: ['__style', 'symbol-id', 'symbol-ref', 'symbol-version'],
     });

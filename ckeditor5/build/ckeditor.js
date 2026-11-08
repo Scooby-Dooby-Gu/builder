@@ -1,6 +1,6 @@
 (function(d){	const l = d['en'] = d['en'] || {};	l.dictionary=Object.assign(		l.dictionary||{},		{"%0 of %1":"%0 of %1","Align cell text to the bottom":"Align cell text to the bottom","Align cell text to the center":"Align cell text to the center","Align cell text to the left":"Align cell text to the left","Align cell text to the middle":"Align cell text to the middle","Align cell text to the right":"Align cell text to the right","Align cell text to the top":"Align cell text to the top","Align center":"Align center","Align left":"Align left","Align right":"Align right","Align table to the left":"Align table to the left","Align table to the right":"Align table to the right",Alignment:"Alignment",Aquamarine:"Aquamarine",Background:"Background",Big:"Big",Black:"Black","Block quote":"Block quote",Blue:"Blue",Bold:"Bold",Border:"Border","Break text":"Break text","Bulleted List":"Bulleted List","Bulleted list styles toolbar":"Bulleted list styles toolbar",Cancel:"Cancel","Cannot upload file:":"Cannot upload file:","Cell properties":"Cell properties","Center table":"Center table","Centered image":"Centered image","Change image text alternative":"Change image text alternative","Character categories":"Character categories","Choose heading":"Choose heading",Circle:"Circle",Color:"Color","Color picker":"Color picker",Column:"Column","Copyright sign":"Copyright sign","Could not insert image at the current position.":"Could not insert image at the current position.","Could not obtain resized image URL.":"Could not obtain resized image URL.",Dashed:"Dashed",Decimal:"Decimal","Decimal with leading zero":"Decimal with leading zero","Decrease indent":"Decrease indent",Default:"Default","Delete column":"Delete column","Delete row":"Delete row","Dim grey":"Dim grey",Dimensions:"Dimensions",Disc:"Disc","Document colors":"Document colors",Dotted:"Dotted",Double:"Double","Double dagger":"Double dagger","Double exclamation mark":"Double exclamation mark","Double low-9 quotation mark":"Double low-9 quotation mark","Double question mark":"Double question mark",Downloadable:"Downloadable","Dropdown toolbar":"Dropdown toolbar","Edit block":"Edit block","Edit link":"Edit link","Edit source":"Edit source","Editor toolbar":"Editor toolbar","Empty snippet content":"Empty snippet content","Enter image caption":"Enter image caption","Enter table caption":"Enter table caption","Exclamation question mark":"Exclamation question mark","Font Color":"Font Color","Font Family":"Font Family","Font Size":"Font Size","Full size image":"Full size image",Green:"Green",Grey:"Grey",Groove:"Groove","Header column":"Header column","Header row":"Header row",Heading:"Heading","Heading 1":"Heading 1","Heading 2":"Heading 2","Heading 3":"Heading 3","Heading 4":"Heading 4","Heading 5":"Heading 5","Heading 6":"Heading 6",Height:"Height","Horizontal ellipsis":"Horizontal ellipsis","Horizontal line":"Horizontal line","Horizontal text alignment toolbar":"Horizontal text alignment toolbar","HTML object":"HTML object","HTML snippet":"HTML snippet",Huge:"Huge","Image resize list":"Image resize list","Image toolbar":"Image toolbar","image widget":"image widget","In line":"In line","Increase indent":"Increase indent",Insert:"Insert","Insert column left":"Insert column left","Insert column right":"Insert column right","Insert HTML":"Insert HTML","Insert image":"Insert image","Insert image or file":"Insert image or file","Insert image via URL":"Insert image via URL","Insert media":"Insert media","Insert paragraph after block":"Insert paragraph after block","Insert paragraph before block":"Insert paragraph before block","Insert row above":"Insert row above","Insert row below":"Insert row below","Insert table":"Insert table","Inserting image failed":"Inserting image failed",Inset:"Inset","Inverted exclamation mark":"Inverted exclamation mark","Inverted question mark":"Inverted question mark",Italic:"Italic",Justify:"Justify","Justify cell text":"Justify cell text","Left aligned image":"Left aligned image","Left double quotation mark":"Left double quotation mark","Left single quotation mark":"Left single quotation mark","Left-pointing double angle quotation mark":"Left-pointing double angle quotation mark","Light blue":"Light blue","Light green":"Light green","Light grey":"Light grey",Link:"Link","Link image":"Link image","Link URL":"Link URL","List properties":"List properties","Lower-latin":"Lower-latin","Lower–roman":"Lower–roman","Media toolbar":"Media toolbar","Media URL":"Media URL","media widget":"media widget","Merge cell down":"Merge cell down","Merge cell left":"Merge cell left","Merge cell right":"Merge cell right","Merge cell up":"Merge cell up","Merge cells":"Merge cells","Navigate editable regions":"Navigate editable regions",Next:"Next","Next editable region":"Next editable region","No preview available":"No preview available",None:"None","Numbered List":"Numbered List","Numbered list styles toolbar":"Numbered list styles toolbar","Open in a new tab":"Open in a new tab","Open link in new tab":"Open link in new tab",Orange:"Orange",Original:"Original",Outset:"Outset",Padding:"Padding",Paragraph:"Paragraph","Paragraph sign":"Paragraph sign","Paste raw HTML here...":"Paste raw HTML here...","Paste the media URL in the input.":"Paste the media URL in the input.","Per mille sign":"Per mille sign","Per ten thousand sign":"Per ten thousand sign",Previous:"Previous","Previous editable region":"Previous editable region",Purple:"Purple","Question exclamation mark":"Question exclamation mark",Red:"Red",Redo:"Redo","Registered sign":"Registered sign","Remove color":"Remove color","Remove Format":"Remove Format","Resize image":"Resize image","Resize image to %0":"Resize image to %0","Resize image to the original size":"Resize image to the original size","Restore default":"Restore default","Reversed order":"Reversed order","Reversed paragraph sign":"Reversed paragraph sign","Rich Text Editor":"Rich Text Editor","Rich Text Editor, %0":"Rich Text Editor, %0",Ridge:"Ridge","Right aligned image":"Right aligned image","Right double quotation mark":"Right double quotation mark","Right single quotation mark":"Right single quotation mark","Right-pointing double angle quotation mark":"Right-pointing double angle quotation mark",Row:"Row",Save:"Save","Save changes":"Save changes","Saving changes":"Saving changes","Section sign":"Section sign","Select all":"Select all","Select column":"Select column","Select row":"Select row","Selecting resized image failed":"Selecting resized image failed","Show more items":"Show more items","Side image":"Side image","Single left-pointing angle quotation mark":"Single left-pointing angle quotation mark","Single low-9 quotation mark":"Single low-9 quotation mark","Single right-pointing angle quotation mark":"Single right-pointing angle quotation mark",Small:"Small",Solid:"Solid","Special characters":"Special characters","Split cell horizontally":"Split cell horizontally","Split cell vertically":"Split cell vertically",Square:"Square","Start at":"Start at","Start index must be greater than 0.":"Start index must be greater than 0.",Style:"Style","Table alignment toolbar":"Table alignment toolbar","Table cell text alignment":"Table cell text alignment","Table properties":"Table properties","Table toolbar":"Table toolbar","Text alignment":"Text alignment","Text alignment toolbar":"Text alignment toolbar","Text alternative":"Text alternative","The color is invalid. Try \"#FF0000\" or \"rgb(255,0,0)\" or \"red\".":"The color is invalid. Try \"#FF0000\" or \"rgb(255,0,0)\" or \"red\".","The URL must not be empty.":"The URL must not be empty.","The value is invalid. Try \"10px\" or \"2em\" or simply \"2\".":"The value is invalid. Try \"10px\" or \"2em\" or simply \"2\".","This link has no URL":"This link has no URL","This media URL is not supported.":"This media URL is not supported.",Tiny:"Tiny","Tip: Paste the URL into the content to embed faster.":"Tip: Paste the URL into the content to embed faster.","Toggle caption off":"Toggle caption off","Toggle caption on":"Toggle caption on","Toggle the circle list style":"Toggle the circle list style","Toggle the decimal list style":"Toggle the decimal list style","Toggle the decimal with leading zero list style":"Toggle the decimal with leading zero list style","Toggle the disc list style":"Toggle the disc list style","Toggle the lower–latin list style":"Toggle the lower–latin list style","Toggle the lower–roman list style":"Toggle the lower–roman list style","Toggle the square list style":"Toggle the square list style","Toggle the upper–latin list style":"Toggle the upper–latin list style","Toggle the upper–roman list style":"Toggle the upper–roman list style","Trade mark sign":"Trade mark sign",Turquoise:"Turquoise","Two dot leader":"Two dot leader","Type or paste your content here.":"Type or paste your content here.","Type your title":"Type your title",Underline:"Underline",Undo:"Undo",Unlink:"Unlink",Update:"Update","Update image URL":"Update image URL","Upload failed":"Upload failed","Upload in progress":"Upload in progress","Upper-latin":"Upper-latin","Upper-roman":"Upper-roman","Vertical text alignment toolbar":"Vertical text alignment toolbar",White:"White","Widget toolbar":"Widget toolbar",Width:"Width","Wrap text":"Wrap text",Yellow:"Yellow"}	);})(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
 /*!
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2026, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -16,7 +16,7 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3787:
+/***/ 3433:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -139147,7 +139147,7 @@ class Underline extends plugin_Plugin {
 }
 
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./ckeditor5-theme-custom/theme/theme.css
-var theme = __webpack_require__(3787);
+var theme = __webpack_require__(3433);
 ;// CONCATENATED MODULE: ./ckeditor5-theme-custom/theme/theme.css
 
             
@@ -143591,6 +143591,11 @@ class InsertContent extends plugin_Plugin {
     editor.model.schema.extend('listItem', {
       allowAttributes: 'class'
     });
+    // Text blocks (paragraphs, headings) take classes too: the Button and
+    // Typography pickers style them.
+    editor.model.schema.extend('$block', {
+      allowAttributes: 'class'
+    });
     editor.model.schema.extend('$container', {
       allowAttributes: ['__style', 'symbol-id', 'symbol-ref', 'symbol-version'],
     });
@@ -143761,9 +143766,21 @@ var AppendPlugin = /** @class */ (function (_super) {
 /* harmony default export */ const appendcommand = (AppendPlugin);
 
 ;// CONCATENATED MODULE: ./src/append/appendtext.svg
-/* harmony default export */ const appendtext = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z\"></path></svg>");
+/* harmony default export */ const appendtext = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z\"/></svg>\n");
 ;// CONCATENATED MODULE: ./src/append/appendcontainer.svg
 /* harmony default export */ const appendcontainer = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\">\n    <path d=\"M20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20M4,6V18H20V6H4Z\" />\n</svg>");
+;// CONCATENATED MODULE: ./src/append/heading.svg
+/* harmony default export */ const append_heading = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M14,18V16H16V6.31L13.5,7.75V5.44L16,4H18V16H20V18H14Z\"/></svg>\n");
+;// CONCATENATED MODULE: ./src/append/button.svg
+/* harmony default export */ const append_button = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M13 5C15.21 5 17 6.79 17 9C17 10.5 16.2 11.77 15 12.46V11.24C15.61 10.69 16 9.89 16 9C16 7.34 14.66 6 13 6S10 7.34 10 9C10 9.89 10.39 10.69 11 11.24V12.46C9.8 11.77 9 10.5 9 9C9 6.79 10.79 5 13 5M20 20.5C19.97 21.32 19.32 21.97 18.5 22H13C12.62 22 12.26 21.85 12 21.57L8 17.37L8.74 16.6C8.93 16.39 9.2 16.28 9.5 16.28H9.7L12 18V9C12 8.45 12.45 8 13 8S14 8.45 14 9V13.47L15.21 13.6L19.15 15.79C19.68 16.03 20 16.56 20 17.14V20.5M20 2H4C2.9 2 2 2.9 2 4V12C2 13.11 2.9 14 4 14H8V12L4 12L4 4H20L20 12H18V14H20V13.96L20.04 14C21.13 14 22 13.09 22 12V4C22 2.9 21.11 2 20 2Z\"/></svg>\n");
+;// CONCATENATED MODULE: ./src/append/list.svg
+/* harmony default export */ const append_list = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z\"/></svg>\n");
+;// CONCATENATED MODULE: ./src/append/quote.svg
+/* harmony default export */ const append_quote = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z\"/></svg>\n");
+;// CONCATENATED MODULE: ./src/append/columns.svg
+/* harmony default export */ const columns = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M4 5V18H21V5H4M14 7V16H11V7H14M6 7H9V16H6V7M19 16H16V7H19V16Z\"/></svg>\n");
+;// CONCATENATED MODULE: ./src/append/card.svg
+/* harmony default export */ const card = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20M4,6V18H20V6H4M6,9H18V11H6V9M6,13H16V15H6V13Z\"/></svg>\n");
 ;// CONCATENATED MODULE: ./src/append/append.ts
 var append_extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -143780,7 +143797,30 @@ var append_extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var append_values = (undefined && undefined.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 //@ts-nocheck
+// The "+" (add element) menu in the element toolbar.
+//
+// Each entry inserts a ready-to-edit structure at the end of the current context:
+// a heading, a button (a link in a paragraph styled by the Button picker), a list,
+// a quote, columns or a card. Content is pre-filled and selected, so typing
+// replaces it.
+
+
+
+
+
+
 
 
 
@@ -143794,36 +143834,103 @@ var append_AppendPlugin = /** @class */ (function (_super) {
     AppendPlugin.prototype.init = function () {
         var _this = this;
         this.editor.commands.add('appendParagraph', new appendcommand(this.editor));
-        this.editor.ui.componentFactory.add('appendText', function (locale) {
+        this.addEntry('appendText', 'Text', appendtext, function () {
+            _this.editor.execute('appendElement', 'paragraph');
+        });
+        this.addEntry('appendHeading', 'Heading', append_heading, function () {
+            _this.appendWith('heading1', {}, function (writer, element) { return _this.fill(writer, element, 'Heading'); });
+        });
+        this.addEntry('appendButton', 'Button', append_button, function () {
+            _this.appendWith('paragraph', { class: 'button' }, function (writer, element) {
+                return _this.fill(writer, element, 'Get started', { linkHref: '#' });
+            });
+        });
+        this.addEntry('appendList', 'List', append_list, function () {
+            _this.appendWith('listItem', { listType: 'bulleted', listIndent: 0 }, function (writer, element) {
+                return _this.fill(writer, element, 'List item');
+            });
+        });
+        this.addEntry('appendQuote', 'Quote', append_quote, function () {
+            _this.appendWith('blockQuote', {}, function (writer, element) {
+                var paragraph = writer.createElement('paragraph');
+                writer.append(paragraph, element);
+                _this.fill(writer, paragraph, 'Quote');
+            });
+        });
+        this.addEntry('appendContainer', 'Container', appendcontainer, function () {
+            _this.editor.execute('appendElement', 'container', {});
+        });
+        this.addEntry('appendColumns', 'Columns', columns, function () {
+            _this.appendWith('container', { class: 'layout-columns-2' }, function (writer, element) {
+                var e_1, _a;
+                var first;
+                try {
+                    for (var _b = append_values(['First column', 'Second column']), _c = _b.next(); !_c.done; _c = _b.next()) {
+                        var label = _c.value;
+                        var column = writer.createElement('container');
+                        var paragraph = writer.createElement('paragraph');
+                        writer.append(column, element);
+                        writer.append(paragraph, column);
+                        writer.insertText(label, paragraph, 0);
+                        first = first || paragraph;
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+                writer.setSelection(writer.createRangeIn(first));
+            });
+        });
+        this.addEntry('appendCard', 'Card', card, function () {
+            _this.appendWith('container', { class: 'card' }, function (writer, element) {
+                var title = writer.createElement('heading2');
+                var text = writer.createElement('paragraph');
+                writer.append(title, element);
+                writer.append(text, element);
+                writer.insertText('Describe it in a sentence or two.', text, 0);
+                _this.fill(writer, title, 'Card title');
+            });
+        });
+    };
+    AppendPlugin.prototype.addEntry = function (name, label, icon, onExecute) {
+        var _this = this;
+        this.editor.ui.componentFactory.add(name, function (locale) {
             var button = new buttonview_ButtonView(locale);
-            var appendCommand = _this.editor.commands.get('AppendCommand');
             button.set({
                 isEnabled: true,
-                label: locale.t('Text'),
-                icon: appendtext,
+                label: locale.t(label),
+                icon: icon,
                 tooltip: true,
+                withText: true,
             });
-            _this.listenTo(button, 'execute', function () {
-                _this.editor.execute('appendElement', 'paragraph');
-            });
+            _this.listenTo(button, 'execute', onExecute);
             return button;
         });
-        this.editor.ui.componentFactory.add('appendContainer', function (locale) {
-            var button = new buttonview_ButtonView(locale);
-            var appendCommand = _this.editor.commands.get('AppendCommand');
-            button.set({
-                isEnabled: true,
-                label: locale.t('Container'),
-                icon: appendcontainer,
-                tooltip: true,
-            });
-            _this.listenTo(button, 'execute', function () {
-                _this.editor.execute('appendElement', 'container', {
-                    class: 'card',
-                });
-            });
-            return button;
+    };
+    // Insert an element at the end of the current context, then fill it in the same
+    // change so the whole insertion is a single undo step.
+    AppendPlugin.prototype.appendWith = function (name, attributes, build) {
+        var editor = this.editor;
+        editor.model.change(function (writer) {
+            editor.execute('appendElement', name, attributes);
+            var element = editor.model.document.selection.getFirstPosition().parent;
+            while (element && element.name !== name && element.parent) {
+                element = element.parent;
+            }
+            if (element && element.name === name) {
+                build(writer, element);
+            }
         });
+    };
+    // Put starter text in an element and select it, so typing replaces it.
+    AppendPlugin.prototype.fill = function (writer, element, text, attributes) {
+        if (attributes === void 0) { attributes = {}; }
+        writer.insertText(text, attributes, element, 0);
+        writer.setSelection(writer.createRangeIn(element));
     };
     return AppendPlugin;
 }(plugin_Plugin));
@@ -144114,6 +144221,20 @@ var context_spreadArray = (undefined && undefined.__spreadArray) || function (to
 
 
 
+// Readable label for the element shown in the context bar, e.g. heading1 -> "Heading 1".
+var KNOWN_NODE_NAMES = {
+    $root: 'Variant', paragraph: 'Paragraph', heading1: 'Heading 1', heading2: 'Heading 2', heading3: 'Heading 3',
+    imageBlock: 'Image', imageInline: 'Image', listItem: 'List item', blockQuote: 'Quote', table: 'Table', htmlDiv: 'Container',
+    htmlDivParagraph: 'Container', htmlUl: 'List', htmlOl: 'List', htmlLi: 'List item', htmlVar: 'Variable', htmlA: 'Link', htmlFigure: 'Figure',
+};
+function readableNodeName(name) {
+    if (!name)
+        return '';
+    if (KNOWN_NODE_NAMES[name])
+        return KNOWN_NODE_NAMES[name];
+    var words = String(name).replace(/^html/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
+    return words.charAt(0).toUpperCase() + words.slice(1);
+}
 var IndicatorView = /** @class */ (function (_super) {
     context_extends(IndicatorView, _super);
     function IndicatorView(locale, type, context) {
@@ -144299,7 +144420,7 @@ var ContextIndicatorView = /** @class */ (function (_super) {
                 }
             });
         });
-        _this.stylesDropdown.buttonView.bind('label').to(_this, 'nodeName', function (name) { var known = { $root: 'Variant', paragraph: 'Paragraph', heading1: 'Heading 1', heading2: 'Heading 2', heading3: 'Heading 3', imageBlock: 'Image', imageInline: 'Image', listItem: 'List item', blockQuote: 'Quote', table: 'Table', htmlDiv: 'Container', htmlDivParagraph: 'Container', htmlUl: 'List', htmlOl: 'List', htmlLi: 'List item', htmlVar: 'Variable', htmlA: 'Link', htmlFigure: 'Figure' }; if (!name) return ''; if (known[name]) return known[name]; var words = String(name).replace(/^html/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase(); return words.charAt(0).toUpperCase() + words.slice(1); });
+        _this.stylesDropdown.buttonView.bind('label').to(_this, 'nodeName', readableNodeName);
         _this.contextToolbarView.items.addMany([_this.back, _this.stylesDropdown, _this.configureDropdown, _this.appendDropdown, _this.actionsDropdown]);
         _this = _super.call(this, locale, type, context) || this;
         _this.assignDOMListeners = function () {
@@ -145616,13 +145737,17 @@ var DocumentToolbar = /** @class */ (function (_super) {
 /* harmony default export */ const documenttoolbar = (DocumentToolbar);
 
 ;// CONCATENATED MODULE: ./src/classes/icons/card.svg
-/* harmony default export */ const card = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M5,3C3.89,3 3,3.89 3,5V19C3,20.11 3.89,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.11,3 19,3H5M5,5H19V19H5V5M7,7V9H17V7H7M7,11V13H17V11H7M7,15V17H14V15H7Z\" /></svg>");
+/* harmony default export */ const icons_card = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M5,3C3.89,3 3,3.89 3,5V19C3,20.11 3.89,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.11,3 19,3H5M5,5H19V19H5V5M7,7V9H17V7H7M7,11V13H17V11H7M7,15V17H14V15H7Z\" /></svg>");
 ;// CONCATENATED MODULE: ./src/classes/icons/typography.svg
 /* harmony default export */ const typography = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M17,8H20V20H21V21H17V20H18V17H14L12.5,20H14V21H10V20H11L17,8M18,9L14.5,16H18V9M5,3H10C11.11,3 12,3.89 12,5V16H9V11H6V16H3V5C3,3.89 3.89,3 5,3M6,5V9H9V5H6Z\" /></svg>");
 ;// CONCATENATED MODULE: ./src/classes/icons/spacing.svg
 /* harmony default export */ const spacing = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M15,5H17V3H15M15,21H17V19H15M11,5H13V3H11M19,5H21V3H19M19,9H21V7H19M19,21H21V19H19M19,13H21V11H19M19,17H21V15H19M3,5H5V3H3M3,9H5V7H3M3,13H5V11H3M3,17H5V15H3M3,21H5V19H3M11,21H13V19H11M7,21H9V19H7M7,5H9V3H7V5Z\" /></svg>");
 ;// CONCATENATED MODULE: ./src/classes/icons/boxshadow.svg
 /* harmony default export */ const boxshadow = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M3,3H18V18H3V3M19,19H21V21H19V19M19,16H21V18H19V16M19,13H21V15H19V13M19,10H21V12H19V10M19,7H21V9H19V7M16,19H18V21H16V19M13,19H15V21H13V19M10,19H12V21H10V19M7,19H9V21H7V19Z\" /></svg>");
+;// CONCATENATED MODULE: ./src/classes/icons/layout.svg
+/* harmony default export */ const layout = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M3 11H11V3H3M5 5H9V9H5M13 21H21V13H13M15 15H19V19H15M3 21H11V13H3M5 15H9V19H5M13 3V11H21V3M19 9H15V5H19Z\"/></svg>\n");
+;// CONCATENATED MODULE: ./src/classes/icons/button.svg
+/* harmony default export */ const icons_button = ("<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\"><path d=\"M13 5C15.21 5 17 6.79 17 9C17 10.5 16.2 11.77 15 12.46V11.24C15.61 10.69 16 9.89 16 9C16 7.34 14.66 6 13 6S10 7.34 10 9C10 9.89 10.39 10.69 11 11.24V12.46C9.8 11.77 9 10.5 9 9C9 6.79 10.79 5 13 5M20 20.5C19.97 21.32 19.32 21.97 18.5 22H13C12.62 22 12.26 21.85 12 21.57L8 17.37L8.74 16.6C8.93 16.39 9.2 16.28 9.5 16.28H9.7L12 18V9C12 8.45 12.45 8 13 8S14 8.45 14 9V13.47L15.21 13.6L19.15 15.79C19.68 16.03 20 16.56 20 17.14V20.5M20 2H4C2.9 2 2 2.9 2 4V12C2 13.11 2.9 14 4 14H8V12L4 12L4 4H20L20 12H18V14H20V13.96L20.04 14C21.13 14 22 13.09 22 12V4C22 2.9 21.11 2 20 2Z\"/></svg>\n");
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-heading/theme/icons/heading1.svg
 /* harmony default export */ const heading1 = ("<svg viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M19 9v10h-2v-8h-2V9h4zM4 8.5h5V4a1 1 0 0 1 1-1h.5a1 1 0 0 1 1 1v11.5a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V11H4v4.5a1 1 0 0 1-1 1h-.5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1H3a1 1 0 0 1 1 1v4.5z\"/></svg>");
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-heading/theme/icons/heading2.svg
@@ -146474,6 +146599,8 @@ FocusTracker.prototype._blur = function (element) {
 
 
 
+
+
 class ckeditor_Editor extends editor {
 }
 
@@ -146564,7 +146691,7 @@ ckeditor_Editor.defaultConfig = {
 	},
 	language: 'en',
 	blockToolbar: [
-		'paragraph', 'heading1', 'heading2',
+		'paragraph', 'heading1', 'heading2', 'heading3',
 		//'alignment',
 		'numberedList',
 		'bulletedList',
@@ -146578,6 +146705,8 @@ ckeditor_Editor.defaultConfig = {
 	styleToolbar: [
 		'image',
 		'classes:image',
+		'classes:button',
+		'classes:layout',
 		'classes:card',
 		'classes:spacing',
 		'classes:typography',
@@ -146587,15 +146716,23 @@ ckeditor_Editor.defaultConfig = {
 		'moreStyles'
 		//'mediaEmbed'
 	],
+	// The "+" (add element) menu: text elements, then layout, then media and data.
 	appendToolbar: [
-		'appendContainer',
+		'appendHeading',
 		'appendText',
-		'insertVariable',
+		'appendButton',
+		'appendList',
+		'appendQuote',
+		'|',
+		'appendContainer',
+		'appendColumns',
+		'appendCard',
 		'horizontalLine',
+		'|',
 		'imageUpload',
 		'mediaEmbed',
-		'table',
 		'insertTable',
+		'insertVariable',
 	],
 	nodeToolbar: [
 		'duplicate',
@@ -146630,21 +146767,49 @@ ckeditor_Editor.defaultConfig = {
 		]
 	},
 	classes: {
-		card: {
-			placeholder: 'Card style',
-			icon: card,
+		// How a container arranges its children.
+		layout: {
+			placeholder: 'Layout',
+			icon: layout,
 			check: (context) => context.name == 'container',
 			options: [
-				{class: null, title: 'No card style'},
-				{class: 'card-promo', title: 'Promo card'},
-				{class: 'card-minimal', title: 'Minimal card'},
-				{class: 'card-horizontal', title: 'Horizontal card'},
-				{class: 'card-lavish', title: 'Lavish card'}
+				{class: null, title: 'Stack'},
+				{class: 'layout-row', title: 'Row'},
+				{class: 'layout-columns-2', title: '2 columns'},
+				{class: 'layout-columns-3', title: '3 columns'},
+				{class: 'layout-columns-4', title: '4 columns'},
+				{class: 'layout-split', title: 'Split (text and media)'},
+				{class: 'layout-center', title: 'Centered'}
+			]
+		},
+		// The surface a container sits on. Themes style these.
+		card: {
+			placeholder: 'Surface',
+			icon: icons_card,
+			check: (context) => context.name == 'container',
+			options: [
+				{class: null, title: 'No surface'},
+				{class: 'card', title: 'Card'},
+				{class: 'card-highlight', title: 'Highlighted card'},
+				{class: 'card-tint', title: 'Tinted panel'},
+				{class: 'card-dark', title: 'Dark panel'}
+			]
+		},
+		// Turns a paragraph with a link into a button.
+		button: {
+			placeholder: 'Button',
+			icon: icons_button,
+			check: (context) => context.name == 'paragraph',
+			options: [
+				{class: null, title: 'Not a button'},
+				{class: 'button', title: 'Primary button'},
+				{class: 'button-secondary', title: 'Secondary button'},
+				{class: 'button-link', title: 'Arrow link'}
 			]
 		},
 		image: {
 			placeholder: 'Image style',
-			icon: card,
+			icon: icons_card,
 			check: (context) => context.name == 'imageBlock',
 			options: [
 				{class: null, title: 'Block image'},
@@ -146657,10 +146822,10 @@ ckeditor_Editor.defaultConfig = {
 			optional: true,
 			check: (context) => context.name == 'container',
 			options: [
-				{class: null, title: 'No spacing'},
-				{class: 'spacing-compact', title: 'Compact spacing'},
-				{class: 'spacing-regular', title: 'Regular spacing'},
-				{class: 'spacing-large', title: 'Large spacing'}
+				{class: null, title: 'No padding'},
+				{class: 'spacing-compact', title: 'Small padding'},
+				{class: 'spacing-regular', title: 'Medium padding'},
+				{class: 'spacing-large', title: 'Section padding'}
 			],
 		},
 		boxshadow:  {
@@ -146681,10 +146846,11 @@ ckeditor_Editor.defaultConfig = {
 			//optional: true,
 			check: (context) => context.name != 'container' && context.name != 'imageBlock' && !context.rootName,
 			options: [
-				{class: null, title: 'Default typography'},
-				{class: 'typography-heading', title: 'Heading'},
-				{class: 'typography-copy', title: 'Copy'},
-				{class: 'typography-accent', title: 'Accent'}
+				{class: null, title: 'Default text'},
+				{class: 'typography-heading', title: 'Display'},
+				{class: 'typography-copy', title: 'Lead'},
+				{class: 'typography-accent', title: 'Eyebrow'},
+				{class: 'typography-small', title: 'Small print'}
 			]
 		},
 	}

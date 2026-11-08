@@ -30,72 +30,16 @@ type BuilderState = {
 }
 
 
-// Starting content for a component that has no saved draft yet.
+// Starting content for a new component that has no saved draft yet.
 export const SEED_VARIANTS: ComponentVariant[] = [
-        {
-            id: '0',
-            isDeleted: false,
-            isValid: true,
-            state: 'published',
-            name: 'Example of empty variant and its name is so long it doesnt fit. Just too long!',
-            content: '',
-        },
-        {
-            id: '1',
-            name: 'Simple flat variant',
-            isDeleted: false,
-            isValid: true,
-            state: 'published',
-            content: `<h1>Hello world</h1>
-            <p>Just a simple text here. But also variable <var data-path="0.broken_path" data-path-placeholder="Product.Title"></var>. That is tricky. Should DOM root elements attributes be converted to the view and, possibly, to model? On the one hand attributes like contenteditable should be, to init editor in the read only mode if the value of the contenteditable is false. On the other hand, there will be some  related attributes, like styles, which should not be converted to view. Note that there is no way to filter these attributes in the DOM - View conversion.</p>
-            <figure class="image">
-              <img src="https://www.robin-noorda.com/uploads/1/6/8/3/16830688/9466078_orig.jpg" />
-            </figure>`
-        },
-        {
-            id: '3',
-            name: 'Variant with data mapping',
-            isDeleted: false,
-            isValid: true,
-            state: 'draft',
-            content:`<h2>Repeating product list</h2>
-            <div class="container">
-                <div class="container" style="border: 2px solid orange" data-path-scope="0.store.books.*">
-                    <figure class="image image-style-side">
-                        <img data-path-src="0.store.books.*.image" src="https://www.robin-noorda.com/uploads/1/6/8/3/16830688/9466078_orig.jpg" />
-                    </figure>
-                    <h2><var data-path="0.store.books.*.title" data-path-placeholder="Product name"></var></h2>
-                    <ul>
-                        <li data-path-scope="0.store.books.*.tags.*" class="tag">
-                          <var data-path="0.store.books.*.tags.*" data-path-placeholder="Tag"></var>
-                        </li>
-                    </ul>
-                    <p>$<var data-path="0.store.books.*.price" data-path-placeholder="Price"></var>
-                       by <em><var data-path="0.store.books.*.author.name" data-path-placeholder="Author"></var></em>
-                    </p>
-                    <p>Has <strong><var data-path="0.store.books.*.reviews.length" data-path-placeholder="Count"></var></strong>&nbsp;reviews</p>
-                    <div class="container" style="border-top: 1px solid dotted" data-path-scope="0.store.books.*.reviews.*">
-                      <h3><var data-path="0.store.books.*.reviews.*.user" data-path-placeholder="User name"></var></h3>
-                      <p><var data-path="0.store.books.*.reviews.*.comment" data-path-placeholder="Comment"></var></p>
-                    <div>
-                </div>
-            </div>`
-        },
-        {
-            id: '2',
-            name: 'Variant with a container',
-            isDeleted: false,
-            isValid: true,
-            state: 'draft',
-            content:`<h2>How about some container?</h2>
-            <div class="container" style="border: 2px solid orange">
-              <p>Yeah <i>why not? This one has custom padding and border.</i></p>
-              <blockquote>
-                <p>The path is in the way. <var data-path="0.broken_path">Product.Title</var></p>
-                <strong>Nice little quote</strong>
-              </blockquote>
-            </div>`
-        }
+    {
+        id: 'default',
+        name: 'Default',
+        state: 'new',
+        isDeleted: false,
+        isValid: true,
+        content: '<h2>New component</h2><p>Use the + button on an element to add headings, text, buttons, columns and more.</p>',
+    },
 ];
 
 const initialState: BuilderState = {

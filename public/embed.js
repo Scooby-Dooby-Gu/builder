@@ -186,7 +186,7 @@
         el.remove();
     }
 
-    function render(published, variantName) {
+    function render(published, variantName, origin) {
         var variants = published.variants || [];
         var variant = variants.find(function (v) { return v.name === variantName || v.id === variantName; }) || variants[0];
         var root = document.createElement("div");
@@ -201,6 +201,12 @@
 
         var scopes = Object.assign({}, published.data || {});
         Array.prototype.slice.call(root.children).forEach(function (child) { populate(child, scopes); });
+
+        // Site-relative images (e.g. /marketing/logo.svg) live on the Builder site,
+        // not on the page that embeds the component.
+        root.querySelectorAll('img[src^="/"]:not([src^="//"])').forEach(function (img) {
+            img.setAttribute("src", origin + img.getAttribute("src"));
+        });
 
         // Leave clean markup behind.
         root.querySelectorAll("[data-path], [data-path-src], [data-path-href], [data-path-hidden], [data-path-placeholder]").forEach(function (el) {
@@ -246,7 +252,7 @@
             addFonts(published.fontUrls);
             var style = document.createElement("style");
             style.textContent = published.css || "";
-            self.shadowRoot.replaceChildren(style, render(published, self.getAttribute("variant")));
+            self.shadowRoot.replaceChildren(style, render(published, self.getAttribute("variant"), origin));
             self.removeAttribute("aria-busy");
             self.dispatchEvent(new CustomEvent("builder:load", {detail: {id: id, version: published.version}}));
         }).catch(function (error) {

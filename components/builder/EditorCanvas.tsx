@@ -11,6 +11,10 @@ import EditorHeader from './EditorHeader';
 import { useDraftAndPublish } from './useDraftAndPublish';
 import { useRouter } from 'next/router';
 import { find, themeCss } from 'utils/styleSystem';
+import { componentBaseCss } from 'lib/componentCss';
+
+// What the editor's classes mean visually, for content in the canvas.
+const BASE_CSS = componentBaseCss('.builder-theme .content');
 
 // The theme picked for this component in the builder header, as scoped CSS.
 function useComponentThemeCss() {
@@ -29,7 +33,6 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
   const [node, setRef] = useState(null);
   const [editor, setEditor] = useState(null)
   const dispatch = useAppDispatch();
-  const stylesheet = useAppSelector((state) => state.builder.styles);
   const variants = useAppSelector((state) => state.builder.variants);
   const isDataDisplayed = useAppSelector((state) => state.builder.isDataDisplayed);
   const isHiddenDisplayed = useAppSelector((state) => state.builder.isHiddenDisplayed);
@@ -49,7 +52,7 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
   }
   return (<Fragment>
     <style>
-      {stylesheet}
+      {BASE_CSS}
     </style>
     <style>
       {componentThemeCss}

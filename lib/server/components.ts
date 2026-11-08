@@ -5,7 +5,7 @@
 // to the live data, so visitors see the real content until they change something;
 // their first write copies what they need into the sandbox.
 
-import seedCollections from "../../data/collections.json";
+import {LIBRARY, seedVariants} from "../../data/components";
 import {deleteKey, getJSON, increment, incrementWindow, setJSON} from "./store";
 import {HttpError, LIVE, Namespace} from "./http";
 import type {ComponentVariant} from "../../models/builder";
@@ -81,17 +81,23 @@ export function libraryDate(date = new Date()) {
     return `${pad(date.getUTCDate())}/${pad(date.getUTCMonth() + 1)}/${date.getUTCFullYear()} ${pad(h12)}:${pad(date.getUTCMinutes())}${suffix}`;
 }
 
+// The starter library (data/components.ts), all unpublished to begin with.
 function seed(): StoredCollection[] {
-    // Start everything as unpublished: publish states come from real publishes.
-    return (seedCollections as any[]).map(collection => ({
-        id: String(collection.id),
+    const created = libraryDate();
+    return LIBRARY.map(collection => ({
+        id: collection.id,
         title: collection.title,
-        components: collection.components.map((c: any) => ({
-            ...c,
-            id: String(c.id),
-            state: "new",
+        components: collection.components.map(c => ({
+            id: c.id,
+            name: c.name,
+            description: c.description,
             published_at: "",
-            collection_id: String(collection.id),
+            modified_at: created,
+            modified_by: "Acme",
+            variant_count: String(c.variants.length),
+            state: "new",
+            datasources: c.datasources,
+            collection_id: collection.id,
         })),
     }));
 }
@@ -149,10 +155,16 @@ async function updateComponentMeta(ns: Namespace, id: string, patch: Partial<Sto
 
 // ------------------------------------------------------------------ drafts
 
-export async function getDraft(ns: Namespace, id: string) {
+export async function getDraft(ns: Namespace, id: string): Promise<Draft | null> {
     const own = await getJSON<Draft>(draftKey(ns, id));
-    if (own || !ns.prefix) return own;
-    return getJSON<Draft>(draftKey(LIVE, id));
+    if (own) return own;
+    if (ns.prefix) {
+        const live = await getJSON<Draft>(draftKey(LIVE, id));
+        if (live) return live;
+    }
+    // Starter components begin with their built-in variants.
+    const starter = seedVariants(id);
+    return starter ? {variants: starter, updatedAt: ""} : null;
 }
 
 function validateVariants(variants: unknown): ComponentVariant[] {

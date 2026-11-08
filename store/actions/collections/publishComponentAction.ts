@@ -24,7 +24,6 @@ const publishComponents = createAsyncThunk(
                     system: state.styles.system,
                     themeId: state.styles.componentThemes[id],
                     datasources: state.datasources,
-                    builderStyles: state.builder.styles,
                 });
                 if (!snapshot.variants.length) throw new Error("It has no content yet.");
                 const {version, publishesLeft} = await API.publishComponent(id, snapshot);

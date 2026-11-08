@@ -34,7 +34,7 @@ const ComponentEditor = () => {
                 dispatch(loadComponent({
                     id,
                     variants: draft?.variants?.length ? draft.variants : SEED_VARIANTS,
-                    draftUpdatedAt: draft?.updatedAt ?? null,
+                    draftUpdatedAt: draft?.updatedAt || null,
                     published,
                 }));
                 setLoadedId(id);

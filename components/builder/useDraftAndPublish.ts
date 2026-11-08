@@ -14,7 +14,6 @@ export function useDraftAndPublish(editor: any) {
     const dispatch = useAppDispatch();
     const componentId = useAppSelector((state) => state.builder.componentId);
     const variants = useAppSelector((state) => state.builder.variants);
-    const builderStyles = useAppSelector((state) => state.builder.styles);
     const system = useAppSelector((state) => state.styles.system);
     const themeId = useAppSelector((state) => componentId ? state.styles.componentThemes[componentId] : undefined);
     const datasources = useAppSelector((state) => state.datasources);
@@ -100,7 +99,6 @@ export function useDraftAndPublish(editor: any) {
             system,
             themeId,
             datasources,
-            builderStyles,
         });
         if (!snapshot.variants.length) {
             throw new Error("There's nothing to publish yet. Add content to a variant first.");
@@ -109,7 +107,7 @@ export function useDraftAndPublish(editor: any) {
         dispatch(setPublished({version: result.version, publishedAt: result.publishedAt}));
         dispatch(setPublishesLeft(result.publishesLeft));
         return result;
-    }, [componentId, saveNow, collect, system, themeId, datasources, builderStyles, dispatch]);
+    }, [componentId, saveNow, collect, system, themeId, datasources, dispatch]);
 
     return {saveNow, publish};
 }

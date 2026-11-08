@@ -519,9 +519,9 @@ function toDeclarations(style: CSSProperties) {
 }
 
 // CSS for one theme, scoped under `scope`. It styles plain content (headings,
-// paragraphs, links, buttons) and the class names the editor's toolbar applies
-// (typography-*, card-*, .container, .tag), so applying a theme restyles a whole
-// component. Selectors are scoped twice over to win against the editor's defaults.
+// paragraphs, links) and the class names the editor's pickers apply (buttons,
+// surfaces, typography, tags), so applying a theme restyles a whole component.
+// It is layered on top of lib/componentCss.ts.
 export function themeCss(system: StyleSystem, theme: ThemeToken, scope: string) {
     const rules: string[] = [];
     const rule = (selectors: string[], style: CSSProperties) => {
@@ -537,42 +537,80 @@ export function themeCss(system: StyleSystem, theme: ThemeToken, scope: string) 
         });
     };
 
+    const body = find(system.textStyles, theme.bodyStyleId);
+
     rule(s(""), {...textStyleCss(system, theme.bodyStyleId), background: colorValue(system, theme.backgroundId), containerType: "inline-size"} as CSSProperties);
-    rule(["h1", ".typography-heading"], {...textStyleCss(system, theme.h1StyleId), margin: "0 0 0.5em"});
+
+    // Headings. Display (typography-heading) uses the theme's Heading 1 style.
+    rule(["h1", ".typography-heading"], {...textStyleCss(system, theme.h1StyleId), margin: "0 0 0.4em"});
     sized(["h1", ".typography-heading"], theme.h1StyleId);
-    rule(["h2"], {...textStyleCss(system, theme.h2StyleId), margin: "1em 0 0.4em"});
-    sized(["h2"], theme.h2StyleId);
-    rule(["h3", "h4"], {...textStyleCss(system, theme.h3StyleId), margin: "1em 0 0.3em"});
+    rule(["h2:not(.typography-heading)"], {...textStyleCss(system, theme.h2StyleId), margin: "0 0 0.5em"});
+    sized(["h2:not(.typography-heading)"], theme.h2StyleId);
+    rule(["h3", "h4"], {...textStyleCss(system, theme.h3StyleId), margin: "0 0 0.4em"});
     sized(["h3", "h4"], theme.h3StyleId);
-    rule(["p", "li", ".typography-copy"], {...textStyleCss(system, theme.bodyStyleId)});
-    sized(["p", "li", ".typography-copy"], theme.bodyStyleId);
+
+    // Body text, lead, eyebrow and small print.
+    rule(["p", "li", "blockquote"], {...textStyleCss(system, theme.bodyStyleId)});
+    sized(["p", "li"], theme.bodyStyleId);
+    if (body) {
+        rule([".typography-copy"], {fontSize: `${Math.round(body.size * 1.2)}px`, lineHeight: body.lineHeight});
+        rule(["blockquote p"], {fontSize: `${Math.round(body.size * 1.35)}px`, lineHeight: 1.45});
+        rule([".typography-small"], {fontSize: `${Math.max(12, Math.round(body.size * 0.82))}px`});
+    }
     rule([".typography-accent"], {...textStyleCss(system, theme.accentStyleId), background: "none", padding: 0, fontVariant: "normal"});
     sized([".typography-accent"], theme.accentStyleId);
 
+    // Links, then buttons (paragraphs styled as buttons hold a link).
     const link = find(system.links, theme.linkId);
     if (link) {
         const css = linkCss(system, link);
-        rule(["a:not(.tag):not(.button)"], css.base);
-        rule(["a:not(.tag):not(.button):hover"], css.hover);
+        rule(["a"], css.base);
+        rule(["a:hover"], css.hover);
+        rule([".button-link > a"], {...css.base, fontWeight: 600, textDecoration: "none"});
     }
     const button = find(system.buttons, theme.buttonId);
+    const buttonBg = button ? colorValue(system, button.backgroundId) ?? colorValue(system, button.borderColorId) : undefined;
+    const buttonText = button ? colorValue(system, button.textColorId) : undefined;
     if (button) {
         const css = buttonCss(system, button);
-        rule(["button", ".button"], {...css.base, display: "inline-block", textDecoration: "none"});
-        rule(["button:hover", ".button:hover"], css.hover);
+        rule([".button > a"], {...css.base, display: "inline-block", textDecoration: "none"});
+        rule([".button > a:hover"], {...css.hover, textDecoration: "none"});
+        rule([".button-secondary > a"], {
+            ...css.base,
+            display: "inline-block",
+            textDecoration: "none",
+            background: "transparent",
+            color: buttonBg ?? css.base.color,
+            border: `1px solid ${buttonBg ?? "currentColor"}`,
+        });
     }
+
+    // Surfaces.
     const card = find(system.cards, theme.cardId);
     if (card) {
-        rule([".container", "[class*='card-']"], cardCss(system, card));
+        const surface = cardCss(system, card);
+        rule([".card", ".card-minimal"], surface);
+        rule([".card-highlight", ".card-promo"], {...surface, border: `2px solid ${buttonBg ?? "currentColor"}`});
+        rule([".card-tint"], {...surface, border: "none", boxShadow: "none", background: colorValue(system, theme.tagBackgroundId) ?? surface.background});
         // A card's title style goes to its own top-level heading; nested headings keep the theme's.
-        rule([".container > h1", ".container > h2", "[class*='card-'] > h1", "[class*='card-'] > h2"],
-            {...textStyleCss(system, card.titleStyleId), marginTop: 0});
-        rule([".container p", "[class*='card-'] p"], textStyleCss(system, card.bodyStyleId));
-        sized([".container > h1", ".container > h2", "[class*='card-'] > h1", "[class*='card-'] > h2"], card.titleStyleId);
-        sized([".container p", "[class*='card-'] p"], card.bodyStyleId);
+        const titles = [".card > h2:not(.typography-heading)", ".card > h3", ".card-highlight > h2:not(.typography-heading)", ".card-highlight > h3"];
+        rule(titles, {...textStyleCss(system, card.titleStyleId), marginTop: 0});
+        sized(titles, card.titleStyleId);
+        rule([".card p", ".card-highlight p", ".card li", ".card-highlight li"], textStyleCss(system, card.bodyStyleId));
+        sized([".card p", ".card-highlight p"], card.bodyStyleId);
+        rule([".card li::before", ".card-highlight li::before", ".card-tint li::before"], {color: buttonBg});
     }
-    // Repeated class matches the builder's own `.tag.tag.tag.tag.tag` rule so the theme wins.
-    rule([".tag.tag.tag.tag.tag"], {
+    // Dark panel: the theme's button color as a brand band, with inverted buttons.
+    if (buttonBg) {
+        rule([".card-dark", ".card-lavish"], {background: buttonBg, color: buttonText});
+        rule([".card-dark h1", ".card-dark h2", ".card-dark h3", ".card-dark p", ".card-dark li", ".card-dark .typography-accent", ".card-dark a"], {color: buttonText});
+        rule([".card-dark .button > a"], {background: buttonText, color: buttonBg, borderColor: buttonText});
+        rule([".card-dark .button-secondary > a"], {background: "transparent", color: buttonText, borderColor: buttonText});
+    }
+    rule([".typography-accent"], {color: buttonBg});
+    rule([".card-dark .typography-accent"], {color: buttonText, opacity: 0.8} as CSSProperties);
+
+    rule([".tag"], {
         ...textStyleCss(system, theme.accentStyleId),
         background: colorValue(system, theme.tagBackgroundId) ?? "transparent",
         borderRadius: "999px",

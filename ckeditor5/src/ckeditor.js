@@ -77,6 +77,8 @@ import cardSvg from './classes/icons/card.svg'
 import typographySvg from './classes/icons/typography.svg'
 import spacingSvg from './classes/icons/spacing.svg'
 import boxshadowSvg from './classes/icons/boxshadow.svg'
+import layoutSvg from './classes/icons/layout.svg'
+import buttonSvg from './classes/icons/button.svg'
 import { ImageTextAlternativeUI } from '@ckeditor/ckeditor5-image';
 import { HeadingButtonsUI } from '@ckeditor/ckeditor5-heading';
 import ParagraphButtonUI from '@ckeditor/ckeditor5-paragraph/src/paragraphbuttonui';
@@ -172,7 +174,7 @@ Editor.defaultConfig = {
 	},
 	language: 'en',
 	blockToolbar: [
-		'paragraph', 'heading1', 'heading2',
+		'paragraph', 'heading1', 'heading2', 'heading3',
 		//'alignment',
 		'numberedList',
 		'bulletedList',
@@ -186,6 +188,8 @@ Editor.defaultConfig = {
 	styleToolbar: [
 		'image',
 		'classes:image',
+		'classes:button',
+		'classes:layout',
 		'classes:card',
 		'classes:spacing',
 		'classes:typography',
@@ -195,15 +199,23 @@ Editor.defaultConfig = {
 		'moreStyles'
 		//'mediaEmbed'
 	],
+	// The "+" (add element) menu: text elements, then layout, then media and data.
 	appendToolbar: [
-		'appendContainer',
+		'appendHeading',
 		'appendText',
-		'insertVariable',
+		'appendButton',
+		'appendList',
+		'appendQuote',
+		'|',
+		'appendContainer',
+		'appendColumns',
+		'appendCard',
 		'horizontalLine',
+		'|',
 		'imageUpload',
 		'mediaEmbed',
-		'table',
 		'insertTable',
+		'insertVariable',
 	],
 	nodeToolbar: [
 		'duplicate',
@@ -238,16 +250,44 @@ Editor.defaultConfig = {
 		]
 	},
 	classes: {
+		// How a container arranges its children.
+		layout: {
+			placeholder: 'Layout',
+			icon: layoutSvg,
+			check: (context) => context.name == 'container',
+			options: [
+				{class: null, title: 'Stack'},
+				{class: 'layout-row', title: 'Row'},
+				{class: 'layout-columns-2', title: '2 columns'},
+				{class: 'layout-columns-3', title: '3 columns'},
+				{class: 'layout-columns-4', title: '4 columns'},
+				{class: 'layout-split', title: 'Split (text and media)'},
+				{class: 'layout-center', title: 'Centered'}
+			]
+		},
+		// The surface a container sits on. Themes style these.
 		card: {
-			placeholder: 'Card style',
+			placeholder: 'Surface',
 			icon: cardSvg,
 			check: (context) => context.name == 'container',
 			options: [
-				{class: null, title: 'No card style'},
-				{class: 'card-promo', title: 'Promo card'},
-				{class: 'card-minimal', title: 'Minimal card'},
-				{class: 'card-horizontal', title: 'Horizontal card'},
-				{class: 'card-lavish', title: 'Lavish card'}
+				{class: null, title: 'No surface'},
+				{class: 'card', title: 'Card'},
+				{class: 'card-highlight', title: 'Highlighted card'},
+				{class: 'card-tint', title: 'Tinted panel'},
+				{class: 'card-dark', title: 'Dark panel'}
+			]
+		},
+		// Turns a paragraph with a link into a button.
+		button: {
+			placeholder: 'Button',
+			icon: buttonSvg,
+			check: (context) => context.name == 'paragraph',
+			options: [
+				{class: null, title: 'Not a button'},
+				{class: 'button', title: 'Primary button'},
+				{class: 'button-secondary', title: 'Secondary button'},
+				{class: 'button-link', title: 'Arrow link'}
 			]
 		},
 		image: {
@@ -265,10 +305,10 @@ Editor.defaultConfig = {
 			optional: true,
 			check: (context) => context.name == 'container',
 			options: [
-				{class: null, title: 'No spacing'},
-				{class: 'spacing-compact', title: 'Compact spacing'},
-				{class: 'spacing-regular', title: 'Regular spacing'},
-				{class: 'spacing-large', title: 'Large spacing'}
+				{class: null, title: 'No padding'},
+				{class: 'spacing-compact', title: 'Small padding'},
+				{class: 'spacing-regular', title: 'Medium padding'},
+				{class: 'spacing-large', title: 'Section padding'}
 			],
 		},
 		boxshadow:  {
@@ -289,10 +329,11 @@ Editor.defaultConfig = {
 			//optional: true,
 			check: (context) => context.name != 'container' && context.name != 'imageBlock' && !context.rootName,
 			options: [
-				{class: null, title: 'Default typography'},
-				{class: 'typography-heading', title: 'Heading'},
-				{class: 'typography-copy', title: 'Copy'},
-				{class: 'typography-accent', title: 'Accent'}
+				{class: null, title: 'Default text'},
+				{class: 'typography-heading', title: 'Display'},
+				{class: 'typography-copy', title: 'Lead'},
+				{class: 'typography-accent', title: 'Eyebrow'},
+				{class: 'typography-small', title: 'Small print'}
 			]
 		},
 	}
