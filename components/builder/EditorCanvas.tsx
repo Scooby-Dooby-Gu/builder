@@ -4,7 +4,7 @@ import React, { Fragment, createContext, useCallback, useContext, useEffect, use
 import { useEditorWithContext } from 'lib/editor';
 import EditorWatchdog from './EditorWatchdog.tsx';
 import Variant from 'components/builder/EditorCanvasVariant';
-import { AddIcon, Container, IconButton, VStack } from "components/ui";
+import { AddIcon, Container, Flex, IconButton, VStack } from "components/ui";
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { addVariant, deleteVariant, moveVariant } from 'store/slices/builderSlice';
 import EditorHeader from './EditorHeader';
@@ -53,6 +53,8 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
       {componentThemeCss}
     </style>
     <EditorWatchdog {...{ node, editor, variants, setEditor }} />
+    {/* One container for toolbar and canvas, as tall as the content, so the toolbar can stay sticky. */}
+    <Flex direction="column" flexGrow={1} flexShrink={0}>
     <EditorHeader />
     <VStack className={`${isDataDisplayed ? 'data-displayed' : 'data-not-displayed'} ${isHiddenDisplayed ? 'hidden-displayed' : 'hidden-not-displayed'}`} onContextMenu={(e) => e.preventDefault()} flexGrow={1} key="editor" pt={10} pb={10} px={6} background="gray.100" spacing="20" onMouseDownCapture={onMouseDown} alignItems="safe center">
       <VStack spacing={10} ref={setRef} className="builder-theme" alignItems="safe center" maxW="full">
@@ -63,5 +65,6 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
         <span>Add new variant</span>
       </VStack>
     </VStack>
+    </Flex>
   </Fragment>)
 }
