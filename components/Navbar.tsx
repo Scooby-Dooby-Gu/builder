@@ -1,5 +1,8 @@
 import React, {FunctionComponent, ReactElement} from "react";
 import {useRouter} from "next/router";
+import SessionBanner from "./SessionBanner";
+import {useAppSelector} from "store/hooks";
+import {resetSandbox, signOut} from "utils/api";
 import {
     QuestionOutlineIcon,
     NavigationHorizontal,
@@ -35,9 +38,19 @@ const Navbar: FunctionComponent<{}> = (props: {}): ReactElement => {
         }
     ];
 
-    const menu = {name: 'John Doe', items: [{label: 'Logout'}]}
+    const session = useAppSelector((state) => state.session);
+    const signInItem = {label: 'Owner sign in', onClick: () => router.push(`/login?next=${encodeURIComponent(router.asPath)}`)};
+    const menu = session.role === 'owner'
+        ? {name: 'Owner', items: [{label: 'Sign out', onClick: () => signOut().then(() => window.location.reload())}]}
+        : {name: 'Visitor', items: [
+            {label: 'Reset sandbox', onClick: () => {
+                if (window.confirm("Reset your sandbox? Your changes will be discarded.")) resetSandbox().then(() => window.location.reload());
+            }},
+            ...(session.ownerLoginAvailable ? [signInItem] : []),
+        ]};
 
     return (
+        <>
         <Box
             height="14"
             boxShadow="base"
@@ -56,6 +69,8 @@ const Navbar: FunctionComponent<{}> = (props: {}): ReactElement => {
                 menu={menu}
             />
         </Box>
+            <SessionBanner/>
+        </>
     )
 }
 

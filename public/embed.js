@@ -8,6 +8,7 @@
  * the host page's CSS can't change it and its CSS can't leak out. Optional
  * attributes: variant="Name or id" picks a variant (default: the first one),
  * id="4" works in place of component, but component avoids duplicate ids on a page,
+ * and preview (on the Builder site only) shows a visitor's own sandbox publish,
  * origin="https://…" reads from another Builder deployment.
  *
  * Data bindings follow the builder's editor preview:
@@ -30,10 +31,10 @@
     // ---------------------------------------------------------------- loading
 
     var requests = {};
-    function loadComponent(origin, id) {
-        var key = origin + "|" + id;
+    function loadComponent(origin, id, preview) {
+        var key = origin + "|" + id + (preview ? "|preview" : "");
         if (!requests[key]) {
-            requests[key] = fetch(origin + "/api/components/" + encodeURIComponent(id))
+            requests[key] = fetch(origin + "/api/components/" + encodeURIComponent(id) + (preview ? "?preview=1" : ""), {cache: preview ? "no-store" : "default"})
                 .then(function (res) {
                     return res.json().catch(function () { return {}; }).then(function (body) {
                         if (!res.ok) throw new Error(body.error || "Request failed (" + res.status + ")");
@@ -218,7 +219,7 @@
     Object.setPrototypeOf(BuilderComponent, HTMLElement);
 
     Object.defineProperty(BuilderComponent, "observedAttributes", {
-        get: function () { return ["component", "id", "variant", "origin"]; },
+        get: function () { return ["component", "id", "variant", "origin", "preview"]; },
     });
 
     BuilderComponent.prototype.connectedCallback = function () {
@@ -240,7 +241,7 @@
             return;
         }
         this.setAttribute("aria-busy", "true");
-        loadComponent(origin, id).then(function (published) {
+        loadComponent(origin, id, this.hasAttribute("preview")).then(function (published) {
             if (self._token !== token) return;
             addFonts(published.fontUrls);
             var style = document.createElement("style");

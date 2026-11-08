@@ -41,17 +41,20 @@
         var params = new URLSearchParams(location.search);
         var id = params.get("id") || "4";
         var variant = params.get("variant") || "";
+        var preview = params.get("preview") === "1";
         var form = document.getElementById("pick");
         form.elements.namedItem("id").value = id;
         form.elements.namedItem("variant").value = variant;
 
         var attrs = 'component="' + id + '"' + (variant ? ' variant="' + variant.replace(/"/g, "&quot;") + '"' : "");
+        if (preview) document.querySelector(".note").textContent = "Preview of your sandbox publish. Embeds on other sites show the owner's live version.";
         document.getElementById("snippet").textContent =
             '<script src="' + location.origin + '/embed.js" async><\/script>\n<builder-component ' + attrs + '></builder-component>';
 
         var el = document.createElement("builder-component");
         el.setAttribute("component", id);
         if (variant) el.setAttribute("variant", variant);
+        if (preview) el.setAttribute("preview", "");
         document.getElementById("mount").appendChild(el);
     })();
 </script>

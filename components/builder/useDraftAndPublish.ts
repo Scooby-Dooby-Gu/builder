@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef} from "react";
 import {useAppDispatch, useAppSelector} from "store/hooks";
 import {setPublished, setSaveStatus} from "store/slices/builderSlice";
+import {setPublishesLeft} from "store/slices/sessionSlice";
 import {publishComponent, saveComponentDraft} from "utils/api";
 import {buildSnapshot} from "lib/publish";
 import {ComponentVariant} from "models/builder";
@@ -105,7 +106,8 @@ export function useDraftAndPublish(editor: any) {
             throw new Error("There's nothing to publish yet. Add content to a variant first.");
         }
         const result = await publishComponent(componentId, snapshot);
-        dispatch(setPublished(result));
+        dispatch(setPublished({version: result.version, publishedAt: result.publishedAt}));
+        dispatch(setPublishesLeft(result.publishesLeft));
         return result;
     }, [componentId, saveNow, collect, system, themeId, datasources, builderStyles, dispatch]);
 

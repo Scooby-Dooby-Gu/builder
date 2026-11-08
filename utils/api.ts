@@ -9,7 +9,7 @@ export interface APIFetchCollections {
 
 export const fetchCollections = () => {
     return fetch(`${baseURL}/collections`)
-        .then(res => res.json())
+        .then(res => json<any[]>(res))
 }
 
 export const createCollection = (title: string) => {
@@ -80,6 +80,31 @@ export const saveComponentDraft = (id: string, variants: any[]) =>
     fetch(`${baseURL}/components/${id}/draft`, {method: "PUT", body: JSON.stringify({variants})})
         .then(res => json<{ updatedAt: string }>(res));
 
+export interface PublishResult extends PublishedInfo {
+    target: "live" | "sandbox",
+    publishesLeft: number | null,
+    publishesPerDay: number | null,
+}
+
 export const publishComponent = (id: string, snapshot: object) =>
     fetch(`${baseURL}/components/${id}/publish`, {method: "POST", body: JSON.stringify(snapshot)})
-        .then(res => json<PublishedInfo>(res));
+        .then(res => json<PublishResult>(res));
+
+// Session: the owner edits live data; visitors get a private sandbox.
+
+export interface Session {
+    role: "owner" | "visitor",
+    ownerLoginAvailable?: boolean,
+    sandboxHours?: number,
+    publishesPerDay?: number,
+    publishesLeft?: number,
+}
+
+export const fetchSession = () => fetch(`${baseURL}/auth/session`).then(res => json<Session>(res));
+
+export const signIn = (password: string) =>
+    fetch(`${baseURL}/auth/login`, {method: "POST", body: JSON.stringify({password})}).then(res => json<Session>(res));
+
+export const signOut = () => fetch(`${baseURL}/auth/logout`, {method: "POST"}).then(res => json<Session>(res));
+
+export const resetSandbox = () => fetch(`${baseURL}/sandbox/reset`, {method: "POST"}).then(res => json<{ ok: true }>(res));

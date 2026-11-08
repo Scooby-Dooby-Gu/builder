@@ -6,6 +6,9 @@ import Head from "next/head";
 import {Provider} from "react-redux";
 import store from "../store/store";
 import FontLinks from "components/styleguide/FontLinks";
+import {useEffect} from "react";
+import {useAppDispatch} from "store/hooks";
+import {loadSession} from "store/slices/sessionSlice";
 
 const globalStyles = {
     styles: {
@@ -52,9 +55,19 @@ export function AppProviders({children}) {
     );
 }
 
+// Who is using the app (owner or sandboxed visitor), loaded once.
+function SessionLoader() {
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(loadSession());
+    }, [dispatch]);
+    return null;
+}
+
 function App({Component, pageProps}: AppProps) {
     return (
         <AppProviders>
+            <SessionLoader/>
             <Head>
                 <title>Builder</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width"/>

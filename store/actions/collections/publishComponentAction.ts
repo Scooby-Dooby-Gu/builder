@@ -5,6 +5,7 @@ import {buildSnapshot} from "../../../lib/publish";
 import {SEED_VARIANTS} from "../../slices/builderSlice";
 import fetchCollections from "./fetchCollectionsAction";
 import {filterAndSort} from "../../slices/collectionsSlice";
+import {setPublishesLeft} from "../../slices/sessionSlice";
 
 // Publish components from the library, without opening the builder: uses each
 // component's saved draft (or the starter content) and its theme.
@@ -26,7 +27,8 @@ const publishComponents = createAsyncThunk(
                     builderStyles: state.builder.styles,
                 });
                 if (!snapshot.variants.length) throw new Error("It has no content yet.");
-                const {version} = await API.publishComponent(id, snapshot);
+                const {version, publishesLeft} = await API.publishComponent(id, snapshot);
+                thunkAPI.dispatch(setPublishesLeft(publishesLeft));
                 results.push({id, version});
             } catch (error) {
                 results.push({id, error: (error as Error).message});

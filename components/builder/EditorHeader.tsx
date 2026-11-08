@@ -36,6 +36,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { setDataDisplayed, setDataRepeated, setHiddenDisplayed, setPreviewBreakpoint } from "store/slices/builderSlice";
 import { setComponentTheme } from "store/slices/stylesSlice";
 import { embedSnippet } from "lib/publish";
+import type { PublishResult } from "utils/api";
 
 // The canvas toolbar. Theme is a property of the component (saved, and it changes
 // the output), so it sits on the left. Preview width and the View options only
@@ -190,21 +191,25 @@ function timeAgo(iso: string | null | undefined) {
     return new Date(iso).toLocaleDateString();
 }
 
-// Save state, publish state and the Publish button.
-function PublishControls({ onPublish, onRetrySave }: { onPublish: () => Promise<{ version: number }>, onRetrySave: () => Promise<unknown> }) {
+// Save state, publish state and the Publish button. The owner publishes to the live
+// embed; visitors publish to their own sandbox, a few times a day.
+function PublishControls({ onPublish, onRetrySave }: { onPublish: () => Promise<PublishResult>, onRetrySave: () => Promise<unknown> }) {
     const componentId = useAppSelector((state) => state.builder.componentId) ?? "";
     const saveStatus = useAppSelector((state) => state.builder.saveStatus);
     const published = useAppSelector((state) => state.builder.published);
     const hasUnpublishedChanges = useAppSelector((state) => state.builder.hasUnpublishedChanges);
+    const session = useAppSelector((state) => state.session);
+    const isVisitor = session.role !== "owner";
+    const outOfPublishes = isVisitor && session.publishesLeft === 0;
     const [isPublishing, setIsPublishing] = useState(false);
-    const [justPublished, setJustPublished] = useState<number | null>(null);
+    const [dialog, setDialog] = useState<{ version: number, target: "live" | "sandbox" } | null>(null);
     const toast = useToast();
 
     const publish = async () => {
         setIsPublishing(true);
         try {
             const result = await onPublish();
-            setJustPublished(result.version);
+            setDialog({ version: result.version, target: result.target });
         } catch (error) {
             toast({ status: "error", title: "Couldn't publish", description: (error as Error).message, isClosable: true });
         } finally {
@@ -219,36 +224,66 @@ function PublishControls({ onPublish, onRetrySave }: { onPublish: () => Promise<
         hasUnpublishedChanges ? { text: "Unpublished changes", color: "orange.600" } :
         { text: `Published v${published.version} · ${timeAgo(published.publishedAt)}`, color: "gray.500" };
 
+    const publishLabel = isVisitor ? "Publish to sandbox" : published ? "Publish changes" : "Publish";
+    const disabledReason = outOfPublishes
+        ? `You've used today's ${session.publishesPerDay ?? 5} sandbox publishes.`
+        : published && !hasUnpublishedChanges ? "Nothing new to publish." : null;
+
     return <Flex align="center" gap="3">
-        <Text fontSize="sm" color={status.color} whiteSpace="nowrap" aria-live="polite">{status.text}</Text>
+        <Box textAlign="right" lineHeight="short">
+            <Text fontSize="sm" color={status.color} whiteSpace="nowrap" aria-live="polite">{status.text}</Text>
+            {isVisitor && session.loaded && session.publishesLeft != null && (
+                <Text fontSize="xs" color="gray.400" whiteSpace="nowrap">
+                    {session.publishesLeft} of {session.publishesPerDay} sandbox publishes left today
+                </Text>
+            )}
+        </Box>
         {saveStatus === "error" && <Button size="xs" variant="ghost" onClick={() => onRetrySave().catch(() => undefined)}>Retry</Button>}
-        {published && <Button size="sm" variant="ghost" color="gray.600" onClick={() => setJustPublished(published.version)}>Embed code</Button>}
-        <Button
-            size="sm"
-            colorScheme="blue"
-            isLoading={isPublishing}
-            loadingText="Publishing"
-            isDisabled={saveStatus === "saving" || (!!published && !hasUnpublishedChanges)}
-            onClick={publish}
-        >
-            {published ? "Publish changes" : "Publish"}
-        </Button>
-        <EmbedModal componentId={componentId} version={justPublished} onClose={() => setJustPublished(null)} />
+        {published && <Button size="sm" variant="ghost" color="gray.600" onClick={() => setDialog({ version: published.version, target: isVisitor ? "sandbox" : "live" })}>
+            {isVisitor ? "Preview" : "Embed code"}
+        </Button>}
+        <Tooltip label={disabledReason} isDisabled={!disabledReason || isPublishing}>
+            <Box as="span">
+                <Button
+                    size="sm"
+                    colorScheme="blue"
+                    isLoading={isPublishing}
+                    loadingText="Publishing"
+                    isDisabled={saveStatus === "saving" || Boolean(disabledReason)}
+                    onClick={publish}
+                >
+                    {publishLabel}
+                </Button>
+            </Box>
+        </Tooltip>
+        <EmbedModal componentId={componentId} dialog={dialog} onClose={() => setDialog(null)} />
     </Flex>
 }
 
-function EmbedModal({ componentId, version, onClose }: { componentId: string, version: number | null, onClose: () => void }) {
+function EmbedModal({ componentId, dialog, onClose }: { componentId: string, dialog: { version: number, target: "live" | "sandbox" } | null, onClose: () => void }) {
     const snippet = embedSnippet(componentId);
     const { hasCopied, onCopy } = useClipboard(snippet);
-    return <Modal isOpen={version != null} onClose={onClose} size="xl">
+    const isSandbox = dialog?.target === "sandbox";
+    const testUrl = `/embed-test.html?id=${encodeURIComponent(componentId)}${isSandbox ? "&preview=1" : ""}`;
+
+    return <Modal isOpen={dialog != null} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
-            <ModalHeader fontSize="lg">Published · version {version}</ModalHeader>
+            <ModalHeader fontSize="lg">
+                {isSandbox ? `Published to your sandbox · version ${dialog?.version}` : `Published · version ${dialog?.version}`}
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-                <Text fontSize="sm" color="gray.600" mb="3">
-                    Add this to any page to show the component. It always renders the latest published version, so you won’t need to change it after publishing again.
-                </Text>
+                {isSandbox ? (
+                    <Text fontSize="sm" color="gray.600" mb="3">
+                        Open the preview to see your version rendered the way an embed would show it. It’s private to you:
+                        embeds on other sites keep showing the owner’s published version, using the code below.
+                    </Text>
+                ) : (
+                    <Text fontSize="sm" color="gray.600" mb="3">
+                        Add this to any page to show the component. It always renders the latest published version, so you won’t need to change it after publishing again.
+                    </Text>
+                )}
                 <Box borderRadius="md" overflow="hidden" bg="gray.900">
                     <Flex align="center" px="4" py="1.5" borderBottom="1px solid" borderColor="whiteAlpha.200">
                         <Text fontSize="xs" color="gray.400">HTML</Text>
@@ -265,16 +300,16 @@ function EmbedModal({ componentId, version, onClose }: { componentId: string, ve
                 </Text>
             </ModalBody>
             <ModalFooter gap="2">
-                <Button as="a" href={`/embed-test.html?id=${encodeURIComponent(componentId)}`} target="_blank" rel="noopener" size="sm" variant="ghost">
-                    Open test page
+                <Button as="a" href={testUrl} target="_blank" rel="noopener" size="sm" variant={isSandbox ? "solid" : "ghost"} colorScheme={isSandbox ? "blue" : undefined}>
+                    {isSandbox ? "Open preview" : "Open test page"}
                 </Button>
-                <Button size="sm" colorScheme="blue" onClick={onClose}>Done</Button>
+                <Button size="sm" variant={isSandbox ? "ghost" : "solid"} colorScheme={isSandbox ? undefined : "blue"} onClick={onClose}>Done</Button>
             </ModalFooter>
         </ModalContent>
     </Modal>
 }
 
-export default function EditorHeader({ onPublish, onRetrySave }: { onPublish: () => Promise<{ version: number }>, onRetrySave: () => Promise<unknown> }) {
+export default function EditorHeader({ onPublish, onRetrySave }: { onPublish: () => Promise<PublishResult>, onRetrySave: () => Promise<unknown> }) {
     return <Flex
         position="sticky"
         top="0"

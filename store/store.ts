@@ -3,13 +3,15 @@ import CollectionsReducer from "./slices/collectionsSlice";
 import BuilderReducer from "./slices/builderSlice";
 import DatasourcesReducer from "./slices/datasourcesSlice";
 import StylesSlice, {STORAGE_KEY} from "./slices/stylesSlice";
+import SessionReducer from "./slices/sessionSlice";
 
 const store = configureStore({
     reducer: {
         collections: CollectionsReducer,
         builder: BuilderReducer,
         datasources: DatasourcesReducer,
-        styles: StylesSlice
+        styles: StylesSlice,
+        session: SessionReducer
     },
 })
 
