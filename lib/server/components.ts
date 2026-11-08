@@ -20,6 +20,7 @@ export interface StoredComponent {
     variant_count: string,
     state: string,
     datasources: { id: string | number, name: string }[],
+    thumbnail?: string,
     collection_id?: string,
 }
 
@@ -106,11 +107,20 @@ function seed(): StoredCollection[] {
 
 export async function getCollections(ns: Namespace = LIVE): Promise<StoredCollection[]> {
     const stored = await getJSON<StoredCollection[]>(collectionsKey(ns));
-    if (stored) return stored;
-    if (ns.prefix) return getCollections(LIVE);
-    const initial = seed();
-    await setJSON(collectionsKey(LIVE), initial);
-    return initial;
+    if (!stored && ns.prefix) return getCollections(LIVE);
+    const collections = stored ?? seed();
+    if (!stored) await setJSON(collectionsKey(LIVE), collections);
+
+    // The card preview follows the first active variant, including saved edits.
+    // Keep the HTML bounded so a large draft cannot make the library response huge.
+    return Promise.all(collections.map(async collection => ({
+        ...collection,
+        components: await Promise.all(collection.components.map(async component => {
+            const draft = await getDraft(ns, component.id);
+            const first = draft?.variants.find(variant => !variant.isDeleted) ?? draft?.variants[0];
+            return {...component, thumbnail: first?.content.slice(0, 30_000) ?? ""};
+        })),
+    })));
 }
 
 export async function saveCollections(ns: Namespace, collections: StoredCollection[]) {

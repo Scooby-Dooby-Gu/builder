@@ -4,8 +4,9 @@ import ComponentUpperInfo from "./ComponentUpperInfo";
 import {Datasource} from "../../../models/datasource";
 import StateBadge from "../../StateBadge";
 import ThemeBadge from "./ThemeBadge";
-import {Flex, Image} from "components/ui";
+import {Box, Flex} from "components/ui";
 import {States} from "../../../models/collection";
+import ComponentThumbnail from "./ComponentThumbnail";
 
 interface Props {
     componentId: string,
@@ -14,6 +15,7 @@ interface Props {
     modified: string,
     modifiedBy: string,
     variants: string,
+    thumbnail: string,
     showInfo: boolean,
     dataSources: Datasource[]
     state: States
@@ -28,6 +30,7 @@ const ComponentUpper: FunctionComponent<Props> = (props: Props): ReactElement =>
         modifiedBy,
         modified,
         variants,
+        thumbnail,
         dataSources,
         state
     } = props;
@@ -71,14 +74,15 @@ const ComponentUpper: FunctionComponent<Props> = (props: Props): ReactElement =>
                     dataSources={dataSources}
                 />
                 :
-                <Image
-                    w="full"
-                    alt={title}
-                    src="/assets/img/component-thumbnail.svg"
-                    onLoad={(event: any) => setImageHeight(event.target.offsetHeight)}
-                    onClick={() => onEdit(componentId)}
-                    cursor="pointer"
-                />
+                <Box w="full" cursor="pointer" onClick={() => onEdit(componentId)}>
+                    {thumbnail ? <ComponentThumbnail html={thumbnail} title={title}/> : <Box
+                        as="img"
+                        w="full"
+                        alt={title}
+                        src="/assets/img/component-thumbnail.svg"
+                        onLoad={(event: any) => setImageHeight(event.target.offsetHeight)}
+                    />}
+                </Box>
             }
         </Flex>
     )

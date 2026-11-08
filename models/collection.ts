@@ -27,6 +27,7 @@ export interface Component {
     datasources: Datasource[],
     modified_by: string,
     variant_count: string,
+    thumbnail?: string,
     state: States,
     collection_id?: string
 }

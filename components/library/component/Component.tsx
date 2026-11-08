@@ -14,6 +14,7 @@ interface Props {
     modified: string,
     modifiedBy: string,
     variants: string,
+    thumbnail: string,
     dataSources: Datasource[],
     state: States,
     showAll: boolean,
@@ -32,6 +33,7 @@ const Component: FunctionComponent<Props> = (props: Props): ReactElement | null 
         modified,
         modifiedBy,
         variants,
+        thumbnail,
         dataSources,
         state,
         collectionId
@@ -62,6 +64,7 @@ const Component: FunctionComponent<Props> = (props: Props): ReactElement | null 
                 modified={modified}
                 modifiedBy={modifiedBy}
                 variants={variants}
+                thumbnail={thumbnail}
                 showInfo={showInfo}
                 dataSources={dataSources}
                 state={state}

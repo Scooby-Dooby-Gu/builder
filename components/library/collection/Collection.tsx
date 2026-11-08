@@ -93,6 +93,7 @@ const Collection: FunctionComponent<Props> = (props: Props): ReactElement => {
                         modified={component.modified_at}
                         modifiedBy={component.modified_by}
                         variants={component.variant_count}
+                        thumbnail={component.thumbnail || ""}
                         dataSources={component.datasources}
                         state={component.state}
                         showAll={showAll}
