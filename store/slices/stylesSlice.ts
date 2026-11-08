@@ -12,6 +12,20 @@ export interface StylesState {
     system: StyleSystem,
     // Which theme each component in the builder uses, by component id.
     componentThemes: Record<string, string>,
+    presetVersion: number,
+}
+
+const THEME_PRESET_VERSION = 1;
+
+function addBundledThemeTokens(system: StyleSystem): StyleSystem {
+    const next = clone(system);
+    (Object.keys(DEFAULT_SYSTEM) as TokenKind[]).forEach(kind => {
+        const current = next[kind] as {id: string}[];
+        const existing = new Set(current.map(item => item.id));
+        const bundled = (DEFAULT_SYSTEM[kind] as {id: string}[]).filter(item => item.id.startsWith("tp-"));
+        (next[kind] as any[]).push(...bundled.filter(item => !existing.has(item.id)).map(clone));
+    });
+    return next;
 }
 
 function loadSaved(): StylesState {
@@ -19,12 +33,23 @@ function loadSaved(): StylesState {
         if (typeof window !== "undefined") {
             const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
             const system = withMissingLayers(saved?.system);
-            if (system) return {system, componentThemes: saved.componentThemes ?? {}};
+            if (system) {
+                const presetVersion = Number(saved.presetVersion) || 0;
+                const loaded = {
+                    system: presetVersion < THEME_PRESET_VERSION ? addBundledThemeTokens(system) : system,
+                    componentThemes: saved.componentThemes ?? {},
+                    presetVersion: THEME_PRESET_VERSION,
+                };
+                if (presetVersion < THEME_PRESET_VERSION) {
+                    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(loaded)); } catch { /* Keep the in-memory themes if storage is unavailable. */ }
+                }
+                return loaded;
+            }
         }
     } catch {
         // Ignore unreadable saved state and fall back to defaults.
     }
-    return {system: clone(DEFAULT_SYSTEM), componentThemes: {}};
+    return {system: clone(DEFAULT_SYSTEM), componentThemes: {}, presetVersion: THEME_PRESET_VERSION};
 }
 
 const initialState: StylesState = loadSaved();
