@@ -1,8 +1,21 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import {
     Box,
     Button,
+    Code,
+    CopyIcon,
+    Divider,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    useClipboard,
+    useToast,
     ButtonGroup,
     ChevronDownIcon,
     EditIcon,
@@ -22,6 +35,7 @@ import {
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { setDataDisplayed, setDataRepeated, setHiddenDisplayed, setPreviewBreakpoint } from "store/slices/builderSlice";
 import { setComponentTheme } from "store/slices/stylesSlice";
+import { embedSnippet } from "lib/publish";
 
 // The canvas toolbar. Theme is a property of the component (saved, and it changes
 // the output), so it sits on the left. Preview width and the View options only
@@ -167,7 +181,100 @@ function ViewMenu() {
     </Menu>
 }
 
-export default function EditorHeader() {
+function timeAgo(iso: string | null | undefined) {
+    if (!iso) return "";
+    const seconds = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (seconds < 45) return "just now";
+    if (seconds < 3600) return `${Math.round(seconds / 60)} min ago`;
+    if (seconds < 86400) return `${Math.round(seconds / 3600)} h ago`;
+    return new Date(iso).toLocaleDateString();
+}
+
+// Save state, publish state and the Publish button.
+function PublishControls({ onPublish, onRetrySave }: { onPublish: () => Promise<{ version: number }>, onRetrySave: () => Promise<unknown> }) {
+    const componentId = useAppSelector((state) => state.builder.componentId) ?? "";
+    const saveStatus = useAppSelector((state) => state.builder.saveStatus);
+    const published = useAppSelector((state) => state.builder.published);
+    const hasUnpublishedChanges = useAppSelector((state) => state.builder.hasUnpublishedChanges);
+    const [isPublishing, setIsPublishing] = useState(false);
+    const [justPublished, setJustPublished] = useState<number | null>(null);
+    const toast = useToast();
+
+    const publish = async () => {
+        setIsPublishing(true);
+        try {
+            const result = await onPublish();
+            setJustPublished(result.version);
+        } catch (error) {
+            toast({ status: "error", title: "Couldn't publish", description: (error as Error).message, isClosable: true });
+        } finally {
+            setIsPublishing(false);
+        }
+    };
+
+    const status =
+        saveStatus === "saving" ? { text: "Saving…", color: "gray.500" } :
+        saveStatus === "error" ? { text: "Couldn't save", color: "red.600" } :
+        !published ? { text: "Not published", color: "gray.500" } :
+        hasUnpublishedChanges ? { text: "Unpublished changes", color: "orange.600" } :
+        { text: `Published v${published.version} · ${timeAgo(published.publishedAt)}`, color: "gray.500" };
+
+    return <Flex align="center" gap="3">
+        <Text fontSize="sm" color={status.color} whiteSpace="nowrap" aria-live="polite">{status.text}</Text>
+        {saveStatus === "error" && <Button size="xs" variant="ghost" onClick={() => onRetrySave().catch(() => undefined)}>Retry</Button>}
+        {published && <Button size="sm" variant="ghost" color="gray.600" onClick={() => setJustPublished(published.version)}>Embed code</Button>}
+        <Button
+            size="sm"
+            colorScheme="blue"
+            isLoading={isPublishing}
+            loadingText="Publishing"
+            isDisabled={saveStatus === "saving" || (!!published && !hasUnpublishedChanges)}
+            onClick={publish}
+        >
+            {published ? "Publish changes" : "Publish"}
+        </Button>
+        <EmbedModal componentId={componentId} version={justPublished} onClose={() => setJustPublished(null)} />
+    </Flex>
+}
+
+function EmbedModal({ componentId, version, onClose }: { componentId: string, version: number | null, onClose: () => void }) {
+    const snippet = embedSnippet(componentId);
+    const { hasCopied, onCopy } = useClipboard(snippet);
+    return <Modal isOpen={version != null} onClose={onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+            <ModalHeader fontSize="lg">Published · version {version}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+                <Text fontSize="sm" color="gray.600" mb="3">
+                    Add this to any page to show the component. It always renders the latest published version, so you won’t need to change it after publishing again.
+                </Text>
+                <Box borderRadius="md" overflow="hidden" bg="gray.900">
+                    <Flex align="center" px="4" py="1.5" borderBottom="1px solid" borderColor="whiteAlpha.200">
+                        <Text fontSize="xs" color="gray.400">HTML</Text>
+                        <Button size="xs" ml="auto" variant="ghost" color="gray.200" _hover={{ bg: "whiteAlpha.200" }} leftIcon={<CopyIcon />} onClick={onCopy}>
+                            {hasCopied ? "Copied" : "Copy"}
+                        </Button>
+                    </Flex>
+                    <Code display="block" whiteSpace="pre" overflowX="auto" p="4" bg="transparent" color="gray.100" fontSize="sm">
+                        {snippet}
+                    </Code>
+                </Box>
+                <Text fontSize="xs" color="gray.500" mt="3">
+                    The script loads once per page. Use the <Code fontSize="xs">variant</Code> attribute to pick a variant by name, e.g. <Code fontSize="xs">{'variant="Simple flat variant"'}</Code>. New versions can take up to a minute to appear.
+                </Text>
+            </ModalBody>
+            <ModalFooter gap="2">
+                <Button as="a" href={`/embed-test.html?id=${encodeURIComponent(componentId)}`} target="_blank" rel="noopener" size="sm" variant="ghost">
+                    Open test page
+                </Button>
+                <Button size="sm" colorScheme="blue" onClick={onClose}>Done</Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
+}
+
+export default function EditorHeader({ onPublish, onRetrySave }: { onPublish: () => Promise<{ version: number }>, onRetrySave: () => Promise<unknown> }) {
     return <Flex
         position="sticky"
         top="0"
@@ -186,6 +293,8 @@ export default function EditorHeader() {
         <Flex align="center" gap="3" ml="auto" wrap="wrap" rowGap="2">
             <PreviewWidthPicker />
             <ViewMenu />
+            <Box alignSelf="stretch" py="1"><Divider orientation="vertical" borderColor="gray.200" /></Box>
+            <PublishControls onPublish={onPublish} onRetrySave={onRetrySave} />
         </Flex>
     </Flex>
 }

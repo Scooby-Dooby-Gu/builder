@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Embed test · Builder</title>
+    <style>
+        /* A deliberately opinionated host page: none of this should reach the component. */
+        body { margin: 0; font: 16px/1.5 Georgia, serif; color: #2d2d2d; background: #fbf7f0; }
+        h1, h2, h3, p { color: #b83280; font-family: "Comic Sans MS", cursive; }
+        img { border: 6px dashed #b83280; }
+        .container { background: #ffe; border: 3px solid red; }
+
+        .host { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+        .host header { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+        .host header strong { font: 600 14px system-ui, sans-serif; color: #2d3748; }
+        .host label, .host code, .host input, .host button, .host .note { font: 13px system-ui, sans-serif; color: #4a5568; }
+        .host input { padding: 4px 8px; border: 1px solid #cbd5e0; border-radius: 6px; width: 100px; }
+        .host button { padding: 4px 10px; border: 1px solid #cbd5e0; border-radius: 6px; background: #fff; cursor: pointer; }
+        .host pre { background: #1a202c; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; overflow-x: auto; font: 13px ui-monospace, monospace; }
+        .frame { background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,.08); padding: 24px; }
+    </style>
+</head>
+<body>
+<div class="host">
+    <header>
+        <strong>Embed test page</strong>
+        <span class="note">This page has loud styles of its own; the component should be unaffected.</span>
+        <form id="pick">
+            <label>Component id <input name="id"></label>
+            <label>Variant <input name="variant" placeholder="first"></label>
+            <button>Show</button>
+        </form>
+    </header>
+    <pre id="snippet"></pre>
+    <div class="frame" id="mount"></div>
+</div>
+<script src="/embed.js"></script>
+<script>
+    (function () {
+        var params = new URLSearchParams(location.search);
+        var id = params.get("id") || "4";
+        var variant = params.get("variant") || "";
+        var form = document.getElementById("pick");
+        form.elements.namedItem("id").value = id;
+        form.elements.namedItem("variant").value = variant;
+
+        var attrs = 'component="' + id + '"' + (variant ? ' variant="' + variant.replace(/"/g, "&quot;") + '"' : "");
+        document.getElementById("snippet").textContent =
+            '<script src="' + location.origin + '/embed.js" async><\/script>\n<builder-component ' + attrs + '></builder-component>';
+
+        var el = document.createElement("builder-component");
+        el.setAttribute("component", id);
+        if (variant) el.setAttribute("variant", variant);
+        document.getElementById("mount").appendChild(el);
+    })();
+</script>
+</body>
+</html>

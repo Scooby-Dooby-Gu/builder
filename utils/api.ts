@@ -60,12 +60,26 @@ export const deleteComponent = (id: string, collectionId: string) => {
         .then(res => res.json())
 }
 
-export const fetchFonts = () => {
-    return fetch(`${baseURL}/fonts`)
-        .then(res => res.json())
+// Component drafts and publishing
+
+export interface PublishedInfo {
+    version: number,
+    publishedAt: string,
 }
 
-export const fetchColors = () => {
-    return fetch(`${baseURL}/colors`)
-        .then(res => res.json())
+async function json<T>(res: Response): Promise<T> {
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || `Request failed (${res.status})`);
+    return body as T;
 }
+
+export const fetchComponentDraft = (id: string) =>
+    fetch(`${baseURL}/components/${id}/draft`).then(res => json<{ draft: { variants: any[], updatedAt: string } | null, published: PublishedInfo | null }>(res));
+
+export const saveComponentDraft = (id: string, variants: any[]) =>
+    fetch(`${baseURL}/components/${id}/draft`, {method: "PUT", body: JSON.stringify({variants})})
+        .then(res => json<{ updatedAt: string }>(res));
+
+export const publishComponent = (id: string, snapshot: object) =>
+    fetch(`${baseURL}/components/${id}/publish`, {method: "POST", body: JSON.stringify(snapshot)})
+        .then(res => json<PublishedInfo>(res));

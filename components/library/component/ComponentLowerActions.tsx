@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import {useAppDispatch} from "../../../store/hooks";
 import {setEditableComponent} from "../../../store/slices/collectionsSlice";
 import deleteComponent from "../../../store/actions/collections/deleteComponentAction";
+import publishComponents from "../../../store/actions/collections/publishComponentAction";
 import {
     ArrowLeftIcon,
     Button,
@@ -15,7 +16,8 @@ import {
     Popover,
     PopoverBody,
     PopoverContent,
-    PopoverTrigger
+    PopoverTrigger,
+    useToast
 } from "components/ui";
 
 const Content = styled(PopoverContent)`
@@ -37,6 +39,14 @@ const ComponentLowerActions: FunctionComponent<Props> = (props: Props): ReactEle
     const onEdit = () => dispatch(setEditableComponent({description, name: title, collectionId, id: componentId}));
 
     const onDelete = () => dispatch(deleteComponent({id: componentId, collectionId}));
+
+    const toast = useToast();
+    const onPublish = async () => {
+        const [result] = await dispatch(publishComponents({ids: [componentId]})).unwrap();
+        toast(result.error
+            ? {status: "error", title: `Couldn't publish ${title}`, description: result.error, isClosable: true}
+            : {status: "success", title: `Published ${title}`, description: `Version ${result.version} is live.`, duration: 2500});
+    };
 
     return (
         <Popover
@@ -66,12 +76,12 @@ const ComponentLowerActions: FunctionComponent<Props> = (props: Props): ReactEle
                             Edit
                         </Button>
 
-                        <Button>
+                        <Button onClick={onPublish}>
                             <DownloadIcon
                                 mr="2"
                             />
 
-                            Re-publish
+                            Publish
                         </Button>
 
                         <Button

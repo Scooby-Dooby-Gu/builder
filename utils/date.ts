@@ -1,4 +1,7 @@
 export const getTime = (datetime: string) => {
+    // Never-published components have no date; sort them last.
+    if (!datetime || !datetime.includes(" ")) return 0;
+
     const [date, time] = datetime.split(" ");
 
     const [day, month, year] = date.split("/");
