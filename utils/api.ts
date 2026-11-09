@@ -67,6 +67,10 @@ export interface PublishedInfo {
     publishedAt: string,
 }
 
+export interface PublishedWithVariants extends PublishedInfo {
+    variants: { id: string, digest: string }[],
+}
+
 async function json<T>(res: Response): Promise<T> {
     const body = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(body.error || `Request failed (${res.status})`);
@@ -74,7 +78,7 @@ async function json<T>(res: Response): Promise<T> {
 }
 
 export const fetchComponentDraft = (id: string) =>
-    fetch(`${baseURL}/components/${id}/draft`).then(res => json<{ draft: { variants: any[], updatedAt: string } | null, published: PublishedInfo | null }>(res));
+    fetch(`${baseURL}/components/${id}/draft`).then(res => json<{ draft: { variants: any[], updatedAt: string } | null, published: PublishedWithVariants | null }>(res));
 
 export const saveComponentDraft = (id: string, variants: any[]) =>
     fetch(`${baseURL}/components/${id}/draft`, {method: "PUT", body: JSON.stringify({variants})})

@@ -13,12 +13,17 @@ const Editor = dynamic(() => import('components/builder/EditorCanvas'), {
   ssr: false,
 });
 
+type LoadState =
+    | { status: "loading" }
+    | { status: "ready", id: string }
+    | { status: "error", message: string };
+
 const ComponentEditor = () => {
     const router = useRouter()
     const id = router.query.id ? String(router.query.id) : null;
     const dispatch = useAppDispatch();
-    const [loadedId, setLoadedId] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // loading ──▶ ready | error ──(Try again)──▶ loading
+    const [load, setLoad] = useState<LoadState>({status: "loading"});
     const [attempt, setAttempt] = useState(0);
 
     // The editor builds its roots from the variants in the store when it starts,
@@ -26,22 +31,25 @@ const ComponentEditor = () => {
     useEffect(() => {
         if (!id) return;
         let cancelled = false;
-        setLoadedId(null);
-        setError(null);
+        setLoad({status: "loading"});
         fetchComponentDraft(id)
             .then(({draft, published}) => {
                 if (cancelled) return;
                 dispatch(loadComponent({
                     id,
                     variants: draft?.variants?.length ? draft.variants : SEED_VARIANTS,
-                    draftUpdatedAt: draft?.updatedAt || null,
-                    published,
+                    savedAt: draft?.updatedAt || null,
+                    // Older servers may not send fingerprints yet; treat that as nothing to compare.
+                    published: published ? {...published, variants: published.variants ?? []} : null,
                 }));
-                setLoadedId(id);
+                setLoad({status: "ready", id});
             })
-            .catch((e) => !cancelled && setError(e.message));
+            .catch((e) => !cancelled && setLoad({status: "error", message: e.message}));
         return () => { cancelled = true; };
     }, [id, dispatch, attempt]);
+
+    // Ready only for the component in the URL, so switching components shows the spinner.
+    const ready = load.status === "ready" && load.id === id;
 
     return <>
         <Head>
@@ -49,12 +57,14 @@ const ComponentEditor = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Navbar/>
-        {error && <Flex direction="column" align="center" gap="3" py="20">
-            <Text color="gray.600">Couldn’t load this component: {error}</Text>
-            <Button size="sm" variant="secondary" onClick={() => setAttempt((n) => n + 1)}>Try again</Button>
-        </Flex>}
-        {!error && loadedId !== id && <Flex justify="center" py="20"><Spinner color="gray.400"/></Flex>}
-        {!error && loadedId && loadedId === id && <Editor key={loadedId} />}
+        <Flex direction="column" flexGrow={1} flexShrink={0} data-load-state={ready ? "ready" : load.status}>
+            {load.status === "error" && <Flex direction="column" align="center" gap="3" py="20">
+                <Text color="gray.600">Couldn’t load this component: {load.message}</Text>
+                <Button size="sm" variant="secondary" onClick={() => setAttempt((n) => n + 1)}>Try again</Button>
+            </Flex>}
+            {load.status !== "error" && !ready && <Flex justify="center" py="20"><Spinner color="gray.400"/></Flex>}
+            {ready && <Editor key={load.id} />}
+        </Flex>
     </>
 }
 

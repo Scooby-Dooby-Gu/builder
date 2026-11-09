@@ -1,43 +1,20 @@
-import React, {FunctionComponent, ReactElement, useEffect, useState} from "react";
+import React, {FunctionComponent, ReactElement} from "react";
 import {Badge} from "components/ui";
-import {States} from "../models/collection";
+import {PUBLICATION_LABEL, PUBLICATION_TONE, toPublicationStatus} from "lib/machines/componentStatus";
 
 interface Props {
-    state: States
+    // The stored component state ("new", "changed", "published"; legacy values read as unpublished).
+    state: string
 }
 
-const ComponentUpperBadge: FunctionComponent<Props> = (props: Props): ReactElement | null => {
-    const {state} = props;
-
-    const [colorScheme, setColorScheme] = useState<string>("");
-
-    useEffect(() => {
-        switch (state) {
-            case States.PUBLISHED:
-                setColorScheme("green");
-                break;
-            case States.STAGED:
-                setColorScheme("cyan")
-                break;
-            case States.DELETED:
-                setColorScheme("red");
-                break;
-            case States.NEW:
-                setColorScheme("blue");
-                break;
-            case States.CHANGED:
-                setColorScheme("yellow");
-                break;
-        }
-    }, [state])
-
-    return colorScheme && (
-        <Badge
-            colorScheme={colorScheme}
-        >
-            {state}
+// A component's publication status, in the same words and colors the builder uses.
+const StateBadge: FunctionComponent<Props> = ({state}: Props): ReactElement => {
+    const status = toPublicationStatus(state);
+    return (
+        <Badge colorScheme={PUBLICATION_TONE[status]} data-publish-state={status}>
+            {PUBLICATION_LABEL[status]}
         </Badge>
-    )
-}
+    );
+};
 
-export default ComponentUpperBadge;
+export default StateBadge;

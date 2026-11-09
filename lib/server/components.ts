@@ -6,6 +6,7 @@
 // their first write copies what they need into the sandbox.
 
 import {LIBRARY, seedVariants} from "../../data/components";
+import {nextComponentState, stateAfterDraftSave, variantFingerprints} from "../machines/componentStatus";
 import {deleteKey, getJSON, increment, incrementWindow, setJSON} from "./store";
 import {HttpError, LIVE, Namespace} from "./http";
 import type {ComponentVariant} from "../../models/builder";
@@ -212,7 +213,7 @@ export async function saveDraft(ns: Namespace, id: string, rawVariants: unknown)
     await updateComponentMeta(ns, id, {
         modified_at: libraryDate(),
         variant_count: String(variants.filter(v => !v.isDeleted).length),
-        state: published ? "changed" : "new",
+        state: stateAfterDraftSave(variantFingerprints(variants), published ? variantFingerprints(published.variants) : null),
     });
     return draft;
 }
@@ -264,7 +265,7 @@ export async function publish(ns: Namespace, id: string, snapshot: ReturnType<ty
     };
     await setJSON(publishedKey(ns, id), published, ns.ttl);
     await updateComponentMeta(ns, id, {
-        state: "published",
+        state: nextComponentState(component.state, {type: "PUBLISHED"}),
         published_at: libraryDate(),
         variant_count: String(snapshot.variants.length),
     });

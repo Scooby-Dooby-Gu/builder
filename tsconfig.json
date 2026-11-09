@@ -18,5 +18,5 @@
     "baseUrl": "."
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "ckeditor5/build/ckeditor-types.js"],
-  "exclude": ["node_modules", "ckeditor5"]
+  "exclude": ["node_modules", "ckeditor5", "**/*.test.ts"]
 }

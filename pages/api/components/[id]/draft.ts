@@ -1,6 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 import {getDraft, getPublished, saveDraft} from "../../../../lib/server/components";
 import {guardWrite, handle, methodNotAllowed, readBody, readNamespace, writeNamespace} from "../../../../lib/server/http";
+import {variantFingerprints} from "../../../../lib/machines/componentStatus";
 
 export const config = {api: {bodyParser: {sizeLimit: "400kb"}}};
 
@@ -13,7 +14,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             const [draft, published] = await Promise.all([getDraft(ns, id), getPublished(ns, id)]);
             return res.status(200).json({
                 draft,
-                published: published ? {version: published.version, publishedAt: published.publishedAt} : null,
+                // Fingerprints let the builder tell which variants changed since publishing.
+                published: published ? {version: published.version, publishedAt: published.publishedAt, variants: variantFingerprints(published.variants)} : null,
             });
         }
         if (req.method === "PUT") {

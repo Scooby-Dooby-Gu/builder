@@ -6,34 +6,18 @@ import { css } from "@chakra-ui/styled-system";
 import EditLink from "components/elements/EditLink";
 import { restoreVariant, deleteVariant, duplicateVariant } from "store/slices/builderSlice";
 import { ComponentVariant } from "models/builder";
+import { variantStatuses } from "lib/machines/document";
+import { VARIANT_LABEL, VARIANT_TONE } from "lib/machines/componentStatus";
 import { Button } from "components/ui";
 
-function VariantBadge({state}) {
-    switch(state) {
-        case 'published':
-            return <Badge colorScheme="teal" variant="subtle">
-                Up-to-date
-            </Badge>
-        case 'draft':
-            return <Badge colorScheme="green" variant="subtle">
-                New
-            </Badge>
-        case 'incorrect':
-            return <Badge colorScheme="red" variant="subtle">
-                Data issue
-            </Badge>
-        case 'deleting':
-            return <Badge colorScheme="red" variant="subtle">
-                Marked for deletion
-            </Badge>
-        default:
-            return <Badge colorScheme="teal" variant="subtle">
-                Up-to-date
-            </Badge>
-    }
+// Each variant's status against the live version, from the document state machine.
+function VariantBadge({ id, isDeleted }: { id: string, isDeleted: boolean }) {
+    const status = useAppSelector((state: RootState) =>
+        variantStatuses(state.builder.document, [{ id, isDeleted }])[id]);
+    return <Badge colorScheme={VARIANT_TONE[status]} variant="subtle" data-variant-state={status}>
+        {VARIANT_LABEL[status]}
+    </Badge>
 }
-
-
 
 export default function Variant({ id, name, content, state, isDeleted } : ComponentVariant) {
     const [isFocused, setFocused] = useState(false);
@@ -62,7 +46,7 @@ export default function Variant({ id, name, content, state, isDeleted } : Compon
         className={`${builderIsFocused && focusedEditableName == id ? 'focused' : ''}`}>
         <HStack width="100%">
             <HStack minWidth={0}>
-                <VariantBadge state={isDeleted ? 'deleting' : state} />
+                <VariantBadge id={id} isDeleted={isDeleted} />
                 {isEditing && <Input />}
                 {!isEditing && <EditLink href="#">{name}</EditLink>}
             </HStack>

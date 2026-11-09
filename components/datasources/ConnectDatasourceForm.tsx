@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useReducer, useState} from "react";
 import {
     Badge, Box, Button, Code, Flex, FormControl, FormLabel, Input, NativeSelect,
     Text, Textarea, useToast,
 } from "components/ui";
 import {createDatasource, testDatasource} from "utils/api";
 import {Datasource} from "models/datasource";
+import {canSave, configKey, connectionReducer, currentSample, initialConnection, isBusy} from "lib/machines/connectionTest";
 
 export default function ConnectDatasourceForm({onCancel, onCreated}: {
     onCancel: () => void,
@@ -20,9 +21,13 @@ export default function ConnectDatasourceForm({onCancel, onCreated}: {
     const [extraHeaders, setExtraHeaders] = useState("{}");
     const [query, setQuery] = useState("");
     const [jsonText, setJsonText] = useState("{}");
-    const [sample, setSample] = useState<unknown>(null);
-    const [tested, setTested] = useState(false);
-    const [busy, setBusy] = useState(false);
+    // Test-then-save flow as a state machine (lib/machines/connectionTest.ts): a
+    // passed test only counts for the exact settings that were tested.
+    const [connection, dispatch] = useReducer(connectionReducer, initialConnection);
+    const key = configKey({kind, endpoint, method, token, extraHeaders, query, jsonText});
+    const sample = currentSample(connection, key);
+    const tested = canSave(connection, key);
+    const busy = isBusy(connection);
 
     const config = () => {
         let extra: unknown;
@@ -39,34 +44,36 @@ export default function ConnectDatasourceForm({onCancel, onCreated}: {
     };
 
     const test = async () => {
-        setBusy(true);
+        const testedKey = key;
+        dispatch({type: "TEST_STARTED", key: testedKey});
         try {
             const result = await testDatasource(config());
-            setSample(result.sample);
-            setTested(true);
+            dispatch({type: "TEST_SUCCEEDED", key: testedKey, sample: result.sample});
             toast({title: "Connection successful", description: "The JSON response is ready to use for field bindings.", status: "success", duration: 3000, isClosable: true});
         } catch (error) {
-            setTested(false);
+            dispatch({type: "TEST_FAILED", key: testedKey, message: (error as Error).message});
             toast({title: "Couldn’t connect", description: (error as Error).message, status: "error", duration: 5000, isClosable: true});
-        } finally {
-            setBusy(false);
         }
     };
 
     const save = async () => {
-        setBusy(true);
+        if (!tested) return;
+        dispatch({type: "SAVE_STARTED"});
         try {
             const datasource = await createDatasource(config());
             onCreated(datasource);
         } catch (error) {
+            dispatch({type: "SAVE_FAILED"});
             toast({title: "Couldn’t save data source", description: (error as Error).message, status: "error", duration: 5000, isClosable: true});
-        } finally {
-            setBusy(false);
         }
     };
 
     return (
-        <Box border="1px solid" borderColor="gray.200" borderRadius="xl" p={{base: "5", md: "7"}} bg="white" boxShadow="sm">
+        <Box
+            border="1px solid" borderColor="gray.200" borderRadius="xl" p={{base: "5", md: "7"}} bg="white" boxShadow="sm"
+            // "stale" means a test passed, but for settings that have since changed.
+            data-connection-state={connection.status === "passed" && !tested ? "stale" : connection.status}
+        >
             <Flex align="flex-start" mb="6" gap="4">
                 <Box>
                     <Text fontSize="lg" fontWeight="semibold">Connect a live API</Text>
@@ -82,14 +89,14 @@ export default function ConnectDatasourceForm({onCancel, onCreated}: {
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>API type</FormLabel>
-                    <NativeSelect value={kind} onChange={e => {setKind(e.target.value as "rest" | "graphql"); setTested(false);}}>
+                    <NativeSelect value={kind} onChange={e => {setKind(e.target.value as "rest" | "graphql")}}>
                         <option value="rest">REST API</option>
                         <option value="graphql">GraphQL API</option>
                     </NativeSelect>
                 </FormControl>
                 <FormControl isRequired gridColumn={{md: "1 / -1"}}>
                     <FormLabel>{kind === "graphql" ? "GraphQL endpoint" : "API endpoint"}</FormLabel>
-                    <Input value={endpoint} onChange={e => {setEndpoint(e.target.value); setTested(false);}} placeholder={kind === "graphql" ? "https://graphql.contentful.com/content/v1/spaces/..." : "https://api.example.com/products"} type="url"/>
+                    <Input value={endpoint} onChange={e => {setEndpoint(e.target.value)}} placeholder={kind === "graphql" ? "https://graphql.contentful.com/content/v1/spaces/..." : "https://api.example.com/products"} type="url"/>
                     <Text fontSize="xs" color="gray.500" mt="1">Use the full HTTPS URL. For Contentful, include your space and environment in the endpoint.</Text>
                     <Text fontSize="xs" color="gray.500" mt="1">
                         Contentful’s GraphQL API and REST Delivery API work here. Paste a Contentful access token above; other CMS APIs can use a bearer token or custom headers.
@@ -97,29 +104,29 @@ export default function ConnectDatasourceForm({onCancel, onCreated}: {
                 </FormControl>
                 {kind === "rest" && <FormControl>
                     <FormLabel>Request method</FormLabel>
-                    <NativeSelect value={method} onChange={e => {setMethod(e.target.value as "GET" | "POST"); setTested(false);}}>
+                    <NativeSelect value={method} onChange={e => {setMethod(e.target.value as "GET" | "POST")}}>
                         <option value="GET">GET</option><option value="POST">POST</option>
                     </NativeSelect>
                 </FormControl>}
                 <FormControl>
                     <FormLabel>Bearer token <Text as="span" fontWeight="normal" color="gray.500">(optional)</Text></FormLabel>
-                    <Input type="password" autoComplete="new-password" value={token} onChange={e => {setToken(e.target.value); setTested(false);}} placeholder="API token"/>
+                    <Input type="password" autoComplete="new-password" value={token} onChange={e => {setToken(e.target.value)}} placeholder="API token"/>
                 </FormControl>
                 <FormControl gridColumn={{md: "1 / -1"}}>
                     <FormLabel>Additional headers <Text as="span" fontWeight="normal" color="gray.500">(JSON, optional)</Text></FormLabel>
-                    <Textarea value={extraHeaders} onChange={e => {setExtraHeaders(e.target.value); setTested(false);}} fontFamily="mono" fontSize="sm" rows={2} placeholder={'{"X-API-Key":"your-key"}'}/>
+                    <Textarea value={extraHeaders} onChange={e => {setExtraHeaders(e.target.value)}} fontFamily="mono" fontSize="sm" rows={2} placeholder={'{"X-API-Key":"your-key"}'}/>
                 </FormControl>
                 {kind === "graphql" && <FormControl isRequired gridColumn={{md: "1 / -1"}}>
                     <FormLabel>GraphQL query</FormLabel>
-                    <Textarea value={query} onChange={e => {setQuery(e.target.value); setTested(false);}} fontFamily="mono" fontSize="sm" rows={7} placeholder={'query Products {\n  productCollection { items { name slug } }\n}'}/>
+                    <Textarea value={query} onChange={e => {setQuery(e.target.value)}} fontFamily="mono" fontSize="sm" rows={7} placeholder={'query Products {\n  productCollection { items { name slug } }\n}'}/>
                 </FormControl>}
                 {(kind === "graphql" || method === "POST") && <FormControl gridColumn={{md: "1 / -1"}}>
                     <FormLabel>{kind === "graphql" ? "Variables" : "JSON request body"}</FormLabel>
-                    <Textarea value={jsonText} onChange={e => {setJsonText(e.target.value); setTested(false);}} fontFamily="mono" fontSize="sm" rows={3}/>
+                    <Textarea value={jsonText} onChange={e => {setJsonText(e.target.value)}} fontFamily="mono" fontSize="sm" rows={3}/>
                 </FormControl>}
             </Box>
 
-            {tested && <Box mt="5" border="1px solid" borderColor="green.200" borderRadius="md" overflow="hidden">
+            {sample !== undefined && <Box mt="5" border="1px solid" borderColor="green.200" borderRadius="md" overflow="hidden">
                 <Text px="3" py="2" bg="green.50" color="green.800" fontSize="sm" fontWeight="medium">Response sample · fields become available for binding</Text>
                 <Box as="pre" m="0" p="3" maxH="220px" overflow="auto" fontSize="xs" bg="gray.900" color="gray.100">{JSON.stringify(sample, null, 2)}</Box>
             </Box>}

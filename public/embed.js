@@ -11,6 +11,11 @@
  * and preview (on the Builder site only) shows a visitor's own sandbox publish,
  * origin="https://…" reads from another Builder deployment.
  *
+ * State: the element reflects its lifecycle as data-state="loading" | "ready" |
+ * "error" (and aria-busy while loading), so pages can style a placeholder, e.g.
+ *   builder-component[data-state="loading"] { min-height: 320px; }
+ * and scripts or agents can wait for it. Events: builder:load, builder:error.
+ *
  * Data bindings follow the builder's editor preview:
  *   data-path-scope="0.store.books.*"   repeat the element once per item
  *   data-path="0.store.books.*.title"   fill the element (or <var>) with a value
@@ -254,7 +259,7 @@
             this._showError("Add a component attribute, e.g. <builder-component component=\"4\">.");
             return;
         }
-        this.setAttribute("aria-busy", "true");
+        this._setState("loading");
         loadComponent(origin, id, this.hasAttribute("preview")).then(function (published) {
             return loadLiveData(origin, id, published).then(function (liveData) {
             if (self._token !== token) return;
@@ -262,16 +267,25 @@
             var style = document.createElement("style");
             style.textContent = published.css || "";
             self.shadowRoot.replaceChildren(style, render(published, self.getAttribute("variant"), origin, liveData));
-            self.removeAttribute("aria-busy");
+            self._setState("ready");
             self.dispatchEvent(new CustomEvent("builder:load", {detail: {id: id, version: published.version}}));
             });
         }).catch(function (error) {
             if (self._token !== token) return;
-            self.removeAttribute("aria-busy");
             self._showError("Couldn't load component " + id + ": " + error.message);
         });
     };
+    // loading ──▶ ready | error; an attribute change starts loading again.
+    BuilderComponent.prototype._setState = function (state) {
+        this.setAttribute("data-state", state);
+        if (state === "loading") this.setAttribute("aria-busy", "true");
+        else this.removeAttribute("aria-busy");
+    };
+    Object.defineProperty(BuilderComponent.prototype, "state", {
+        get: function () { return this.getAttribute("data-state") || "loading"; },
+    });
     BuilderComponent.prototype._showError = function (message) {
+        this._setState("error");
         console.warn("[builder] " + message);
         var note = document.createElement("div");
         note.textContent = message;

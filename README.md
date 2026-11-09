@@ -22,6 +22,14 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 `NODE_OPTIONS=--openssl-legacy-provider` is needed on Node 17 and later, because Next.js 12 uses an older webpack hashing setup. On Node 16 you can leave it out.
 
+## Tests
+
+```bash
+npm test
+```
+
+Runs the state machine tests in `lib/machines` with Node's built-in test runner. See `lib/machines/README.md` for the machines and the `data-*` state attributes the UI exposes.
+
 ## Project layout
 
 - `pages/`: routes for the component library (`/components`), the builder (`/components/[id]`), the style guide (`/styles`), and data sources (`/datasources`)

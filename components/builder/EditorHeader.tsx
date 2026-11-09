@@ -36,6 +36,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { setDataDisplayed, setDataRepeated, setHiddenDisplayed, setPreviewBreakpoint } from "store/slices/builderSlice";
 import { setComponentTheme } from "store/slices/stylesSlice";
 import { embedSnippet } from "lib/publish";
+import { dataStates, publishBlocker, statusLine } from "lib/machines/document";
 import type { PublishResult } from "utils/api";
 
 // The canvas toolbar. Theme is a property of the component (saved, and it changes
@@ -195,61 +196,56 @@ function timeAgo(iso: string | null | undefined) {
 // embed; visitors publish to their own sandbox, a few times a day.
 function PublishControls({ onPublish, onRetrySave }: { onPublish: () => Promise<PublishResult>, onRetrySave: () => Promise<unknown> }) {
     const componentId = useAppSelector((state) => state.builder.componentId) ?? "";
-    const saveStatus = useAppSelector((state) => state.builder.saveStatus);
-    const published = useAppSelector((state) => state.builder.published);
-    const hasUnpublishedChanges = useAppSelector((state) => state.builder.hasUnpublishedChanges);
+    const document = useAppSelector((state) => state.builder.document);
     const session = useAppSelector((state) => state.session);
     const isVisitor = session.role !== "owner";
-    const outOfPublishes = isVisitor && session.publishesLeft === 0;
-    const [isPublishing, setIsPublishing] = useState(false);
     const [dialog, setDialog] = useState<{ version: number, target: "live" | "sandbox" } | null>(null);
     const toast = useToast();
 
+    // Everything below is derived from the document state machine (lib/machines/document.ts).
+    const line = statusLine(document, timeAgo);
+    const isPublishing = document.publish.status === "publishing";
+    const blocker = publishBlocker(document, isVisitor ? { left: session.publishesLeft, perDay: session.publishesPerDay } : undefined);
+    const states = dataStates(document);
+    const published = document.published;
+
     const publish = async () => {
-        setIsPublishing(true);
         try {
             const result = await onPublish();
             setDialog({ version: result.version, target: result.target });
         } catch (error) {
-            toast({ status: "error", title: "Couldn't publish", description: (error as Error).message, isClosable: true });
-        } finally {
-            setIsPublishing(false);
+            toast({ status: "error", title: "Couldn’t publish", description: (error as Error).message, isClosable: true });
         }
     };
 
-    const status =
-        saveStatus === "saving" ? { text: "Saving…", color: "gray.500" } :
-        saveStatus === "error" ? { text: "Couldn't save", color: "red.600" } :
-        !published ? { text: "Not published", color: "gray.500" } :
-        hasUnpublishedChanges ? { text: "Unpublished changes", color: "orange.600" } :
-        { text: `Published v${published.version} · ${timeAgo(published.publishedAt)}`, color: "gray.500" };
-
     const publishLabel = isVisitor ? "Publish to sandbox" : published ? "Publish changes" : "Publish";
-    const disabledReason = outOfPublishes
-        ? `You've used today's ${session.publishesPerDay ?? 5} sandbox publishes.`
-        : published && !hasUnpublishedChanges ? "Nothing new to publish." : null;
+    const lineColor = line.tone === "orange" ? "orange.600" : line.tone === "red" ? "red.600" : "gray.500";
 
-    return <Flex align="center" gap="3">
+    return <Flex align="center" gap="3" data-save-state={states.save} data-publish-state={states.publish}>
         <Box textAlign="right" lineHeight="short">
-            <Text fontSize="sm" color={status.color} whiteSpace="nowrap" aria-live="polite">{status.text}</Text>
+            <Text fontSize="sm" color={lineColor} whiteSpace="nowrap" aria-live="polite">{line.text}</Text>
             {isVisitor && session.loaded && session.publishesLeft != null && (
                 <Text fontSize="xs" color="gray.400" whiteSpace="nowrap">
                     {session.publishesLeft} of {session.publishesPerDay} sandbox publishes left today
                 </Text>
             )}
         </Box>
-        {saveStatus === "error" && <Button size="xs" variant="ghost" onClick={() => onRetrySave().catch(() => undefined)}>Retry</Button>}
+        {document.sync.status === "error" && (
+            <Tooltip label={document.sync.message}>
+                <Button size="xs" variant="ghost" onClick={() => onRetrySave().catch(() => undefined)}>Retry</Button>
+            </Tooltip>
+        )}
         {published && <Button size="sm" variant="ghost" color="gray.600" onClick={() => setDialog({ version: published.version, target: isVisitor ? "sandbox" : "live" })}>
             {isVisitor ? "Preview" : "Embed code"}
         </Button>}
-        <Tooltip label={disabledReason} isDisabled={!disabledReason || isPublishing}>
+        <Tooltip label={blocker} isDisabled={!blocker || isPublishing}>
             <Box as="span">
                 <Button
                     size="sm"
                     colorScheme="blue"
                     isLoading={isPublishing}
                     loadingText="Publishing"
-                    isDisabled={saveStatus === "saving" || Boolean(disabledReason)}
+                    isDisabled={Boolean(blocker)}
                     onClick={publish}
                 >
                     {publishLabel}

@@ -37,6 +37,8 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
   const isDataDisplayed = useAppSelector((state) => state.builder.isDataDisplayed);
   const isHiddenDisplayed = useAppSelector((state) => state.builder.isHiddenDisplayed);
   const componentThemeCss = useComponentThemeCss();
+  // unloaded → starting → initialized → ready (set by EditorWatchdog); exposed for tests and agents.
+  const editorStatus = useAppSelector((state) => state.builder.status);
   const { saveNow, publish } = useDraftAndPublish(editor);
 
 
@@ -61,7 +63,7 @@ export default function CEditor({ onChange, onReady, ...props }: any) {
     {/* One container for toolbar and canvas, as tall as the content, so the toolbar can stay sticky. */}
     <Flex direction="column" flexGrow={1} flexShrink={0}>
     <EditorHeader onPublish={publish} onRetrySave={saveNow} />
-    <VStack className={`${isDataDisplayed ? 'data-displayed' : 'data-not-displayed'} ${isHiddenDisplayed ? 'hidden-displayed' : 'hidden-not-displayed'}`} onContextMenu={(e) => e.preventDefault()} flexGrow={1} key="editor" pt={10} pb={10} px={6} background="gray.100" spacing="20" onMouseDownCapture={onMouseDown} alignItems="safe center">
+    <VStack className={`${isDataDisplayed ? 'data-displayed' : 'data-not-displayed'} ${isHiddenDisplayed ? 'hidden-displayed' : 'hidden-not-displayed'}`} onContextMenu={(e) => e.preventDefault()} flexGrow={1} key="editor" pt={10} pb={10} px={6} background="gray.100" spacing="20" onMouseDownCapture={onMouseDown} alignItems="safe center" data-editor-state={editorStatus}>
       <VStack spacing={10} ref={setRef} className="builder-theme" alignItems="safe center" maxW="full">
         {editableElements}
       </VStack>

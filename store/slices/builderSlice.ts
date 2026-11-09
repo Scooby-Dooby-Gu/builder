@@ -1,11 +1,16 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { ComponentVariant } from 'models/builder';
+import { documentReducer, DocumentEvent, DocumentState, initialDocument, PublishedInfo } from 'lib/machines/document';
+import { variantFingerprints } from 'lib/machines/componentStatus';
+
+// The editor engine's lifecycle, set by EditorWatchdog.
+export type EditorStatus = 'unloaded' | 'starting' | 'initialized' | 'ready';
 
 
 
 type BuilderState = {
     contextPath: Number[] | null;
-    status: string;
+    status: EditorStatus;
     focusedEditableName: string | null;
     contextEditableName: string | null;
     isPropertiesPanelOpen: boolean,
@@ -21,12 +26,9 @@ type BuilderState = {
     hasRepeating: boolean,
     // Style guide breakpoint the canvas previews at; null fits the default width.
     previewBreakpointId: string | null,
-    // The component being edited, and its draft and publish status.
+    // The component being edited, and its save/publish lifecycle (lib/machines/document.ts).
     componentId: string | null,
-    saveStatus: 'idle' | 'saving' | 'saved' | 'error',
-    savedAt: string | null,
-    published: { version: number, publishedAt: string } | null,
-    hasUnpublishedChanges: boolean
+    document: DocumentState
 }
 
 
@@ -156,10 +158,7 @@ const initialState: BuilderState = {
     hasRepeating: true,
     previewBreakpointId: null,
     componentId: null,
-    saveStatus: 'idle',
-    savedAt: null,
-    published: null,
-    hasUnpublishedChanges: false
+    document: initialDocument
 }
 
 interface moveVariant {
@@ -200,7 +199,7 @@ export const builderSlice = createSlice({
                 content: ''
             })
         },
-        setStatus: (state, action: PayloadAction<string>) => {
+        setStatus: (state, action: PayloadAction<EditorStatus>) => {
             state.status = action.payload
         },
         setFocusedEditableName: (state, action: PayloadAction<string>) => {
@@ -231,26 +230,21 @@ export const builderSlice = createSlice({
             state.previewBreakpointId = action.payload;
         },
         // Load a component's saved draft (or the starter content) before the editor starts.
-        loadComponent: (state, action: PayloadAction<{ id: string, variants: ComponentVariant[], draftUpdatedAt: string | null, published: { version: number, publishedAt: string } | null }>) => {
-            const { id, variants, draftUpdatedAt, published } = action.payload;
+        loadComponent: (state, action: PayloadAction<{ id: string, variants: ComponentVariant[], savedAt: string | null, published: PublishedInfo | null }>) => {
+            const { id, variants, savedAt, published } = action.payload;
             state.componentId = id;
             state.variants = variants;
-            state.published = published;
-            state.savedAt = draftUpdatedAt;
-            state.saveStatus = draftUpdatedAt ? 'saved' : 'idle';
-            state.hasUnpublishedChanges = !!(published && draftUpdatedAt && draftUpdatedAt > published.publishedAt);
             state.status = 'unloaded';
+            state.document = documentReducer(state.document, {
+                type: 'LOADED',
+                savedAt,
+                saved: variantFingerprints(variants),
+                published,
+            });
         },
-        setSaveStatus: (state, action: PayloadAction<{ status: 'idle' | 'saving' | 'saved' | 'error', savedAt?: string }>) => {
-            state.saveStatus = action.payload.status;
-            if (action.payload.savedAt) {
-                state.savedAt = action.payload.savedAt;
-                state.hasUnpublishedChanges = true;
-            }
-        },
-        setPublished: (state, action: PayloadAction<{ version: number, publishedAt: string }>) => {
-            state.published = action.payload;
-            state.hasUnpublishedChanges = false;
+        // Every save/publish change goes through the document state machine.
+        documentEvent: (state, action: PayloadAction<DocumentEvent>) => {
+            state.document = documentReducer(state.document, action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -273,8 +267,7 @@ export const {
     setHiddenDisplayed,
     setPreviewBreakpoint,
     loadComponent,
-    setSaveStatus,
-    setPublished
+    documentEvent
 } = builderSlice.actions;
 
 export default builderSlice.reducer;
